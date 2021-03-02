@@ -10,7 +10,11 @@
             android:name="com.github.stefnotch.vibratingalarmclock.FirstFragment"
             android:label="@string/first_fragment_label"
             tools:layout="@layout/fragment_first">
-
+        <argument
+                android:name="alarmId"
+                app:argType="integer"
+                android:defaultValue="-1"
+        />
         <action
                 android:id="@+id/action_FirstFragment_to_SecondFragment"
                 app:destination="@id/SecondFragment"/>

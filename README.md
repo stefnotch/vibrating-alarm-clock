@@ -7,6 +7,8 @@ https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/
 ## TODO:
 https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
+https://github.com/android/sunflower/tree/main/app/src/main/java/com/google/samples/apps/sunflower/data
+https://developer.android.com/guide/navigation/navigation-pass-data
 
 ## Developer information
 

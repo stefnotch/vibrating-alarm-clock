@@ -26,14 +26,28 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp">
+            android:layout_marginEnd="8dp"
+            android:id="@+id/textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Alarm Title" />
+                android:hint="Alarm Title"
+                android:id="@+id/title_input"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+            android:text="Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:id="@+id/time_input"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:clickable="true"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

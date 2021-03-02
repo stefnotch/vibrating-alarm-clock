@@ -20,10 +20,10 @@ import java.util.*
 class Alarm(id: Int, time: LocalTime) {
     @PrimaryKey
     @NonNull
-    private var id = 0;
+    val id = id;
 
     var title = "";
-    var time = LocalTime.now();
+    var time = time;
 
     var isRecurring = false; // If it repeats on some day(s) of the week
     var days = DaysOfTheWeek.None;
