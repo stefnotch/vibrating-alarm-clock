@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -26,6 +27,12 @@ class FirstFragment : Fragment() {
 
         view.findViewById<Button>(R.id.button_first).setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        }
+
+        view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
+            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+            //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //        .setAction("Action", null).show()
         }
     }
 }
