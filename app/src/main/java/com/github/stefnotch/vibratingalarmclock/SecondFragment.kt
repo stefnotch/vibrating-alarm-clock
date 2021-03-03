@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
+import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -43,14 +46,17 @@ class SecondFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
+        val daysDisplay = view.findViewById<LinearLayout>(R.id.is_recurring_days)
         val okButton = view.findViewById<Button>(R.id.button_ok)
         val textInput = view.findViewById<TextInputEditText>(R.id.title_input)
 
         lifecycleScope.launch {
             val alarmRepository = AlarmRepository(requireContext())
+            var isNewAlarm = false
             val alarm =
-                if (args.alarmId == -1) alarmRepository.insert(Alarm(LocalTime.now())) else (alarmRepository.get(args.alarmId)
-                    ?: alarmRepository.insert(Alarm(LocalTime.now())))
+                if (args.alarmId == -1) Alarm(LocalTime.now()).let { isNewAlarm = true; it } else (alarmRepository.get(
+                    args.alarmId
+                ) ?: Alarm(LocalTime.now()).let { isNewAlarm = true; it })
 
             textInput.setText(alarm.title)
             okButton.isEnabled = !textInput.text?.toString().isNullOrBlank()
@@ -75,10 +81,38 @@ class SecondFragment : Fragment() {
             view.findViewById<Button>(R.id.time_input)
                 .setText(alarm.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
 
+            val isRecurringInput = view.findViewById<CheckBox>(R.id.is_recurring)
+            isRecurringInput.isChecked = alarm.isRecurring
+            daysDisplay.visibility = if (alarm.isRecurring) LinearLayout.VISIBLE else LinearLayout.INVISIBLE
+            isRecurringInput.setOnCheckedChangeListener { _, isChecked ->
+                alarm.isRecurring = isChecked
+                daysDisplay.visibility = if (alarm.isRecurring) LinearLayout.VISIBLE else LinearLayout.INVISIBLE
+            }
+
+            for ((id, day) in arrayOf(
+                Pair(R.id.on_monday, DaysOfTheWeek.Monday),
+                Pair(R.id.on_tuesday, DaysOfTheWeek.Tuesday),
+                Pair(R.id.on_wednesday, DaysOfTheWeek.Wednesday),
+                Pair(R.id.on_thursday, DaysOfTheWeek.Thursday),
+                Pair(R.id.on_friday, DaysOfTheWeek.Friday),
+                Pair(R.id.on_saturday, DaysOfTheWeek.Saturday),
+                Pair(R.id.on_sunday, DaysOfTheWeek.Sunday),
+            )) {
+                val checkbox = view.findViewById<CheckBox>(id)
+                checkbox.isChecked = DaysOfTheWeek.contains(alarm.days, day)
+                checkbox.setOnCheckedChangeListener { _, isChecked ->
+                    alarm.days = if (isChecked) alarm.days or day else alarm.days and day.inv()
+                }
+            }
+
             okButton.setOnClickListener {
                 lifecycleScope.launch {
                     alarm.title = textInput.text.toString()
-                    alarmRepository.update(alarm)
+                    if(isNewAlarm) {
+                        alarmRepository.insert(alarm)
+                    } else {
+                        alarmRepository.update(alarm)
+                    }
                     findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
                 }
             }

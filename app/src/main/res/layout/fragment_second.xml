@@ -58,6 +58,61 @@
             app:layout_constraintStart_toStartOf="parent"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:clickable="true"/>
+    <CheckBox
+            android:text="@string/is_recurring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/is_recurring"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/time_input"
+            android:layout_marginTop="32dp"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/is_recurring"
+            android:id="@+id/is_recurring_days"
+            android:visibility="invisible"
+            android:layout_marginStart="32dp">
+        <CheckBox
+                android:text="@string/monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_monday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_tuesday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_wednesday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_thursday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_friday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/saturday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_saturday" android:minHeight="32dp"/>
+        <CheckBox
+                android:text="@string/sunday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/on_sunday" android:minHeight="32dp"/>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
