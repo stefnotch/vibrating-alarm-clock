@@ -17,10 +17,10 @@ import java.util.*
 
 
 @Entity(tableName = "alarms")
-class Alarm(id: Int, time: LocalTime) {
-    @PrimaryKey
+class Alarm(time: LocalTime) {
+    @PrimaryKey(autoGenerate = true)
     @NonNull
-    val id = id;
+    var id: Int = 0; // Should be readonly, whatever
 
     var title = "";
     var time = time;

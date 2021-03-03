@@ -7,31 +7,33 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 
-class AlarmRepository {
-    private lateinit var alarmDao: AlarmDao
+class AlarmRepository(context: Context) {
+    private val alarmDao: AlarmDao
 
-    fun AlarmRepository(context: Context) {
+    init {
         val db: AppDatabase = AppDatabase.getInstance(context)
         alarmDao = db.alarmDao()
     }
 
-    fun get(id: String): Alarm? {
+    suspend fun get(id: Int): Alarm? {
         return alarmDao.get(id)
     }
 
-    fun insert(alarm: Alarm): Long{
-        return alarmDao.insert(alarm)
+    suspend fun insert(alarm: Alarm): Alarm {
+        alarmDao.insert(alarm)
+
+        return alarm
     }
 
-    fun delete(alarm: Alarm) {
+    suspend fun delete(alarm: Alarm) {
         return alarmDao.delete(alarm)
     }
 
-    fun getAll(): List<Alarm> {
+    suspend fun getAll(): List<Alarm> {
         return alarmDao.getAll()
     }
 
-    fun update(alarm: Alarm){
+    suspend fun update(alarm: Alarm){
         return alarmDao.update(alarm)
     }
 }

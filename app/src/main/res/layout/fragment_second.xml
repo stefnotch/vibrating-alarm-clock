@@ -8,14 +8,24 @@
         tools:context=".SecondFragment">
 
     <Button
+            android:id="@+id/button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@android:string/cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_ok"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginBottom="8dp"/>
+
+    <Button
             android:id="@+id/button_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@android:string/ok"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button_cancel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-    />
+            android:layout_marginStart="16dp" android:layout_marginEnd="16dp" android:layout_marginBottom="8dp"/>
 
     <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -32,13 +42,13 @@
         <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Alarm Title"
+                android:hint="@string/alarm_title"
                 android:id="@+id/title_input"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-            android:text="Time"
+            android:text="@string/set_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -46,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:clickable="true"/>
 
 

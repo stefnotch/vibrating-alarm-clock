@@ -8,17 +8,17 @@ import android.database.Cursor;
 @Dao
 interface AlarmDao {
     @Query("SELECT * FROM alarms WHERE id=:id ")
-    fun get(id: String): Alarm?
+    suspend fun get(id: Int): Alarm?
 
     @Insert
-    fun insert(alarm: Alarm): Long
+    suspend fun insert(alarm: Alarm): Long
 
     @Delete
-    fun delete(alarm: Alarm)
+    suspend fun delete(alarm: Alarm)
 
     @Query("SELECT * FROM alarms ORDER BY title ASC")
-    fun getAll(): List<Alarm>
+    suspend fun getAll(): List<Alarm>
 
     @Update
-    fun update(alarm: Alarm)
+    suspend fun update(alarm: Alarm)
 }
