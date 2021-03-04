@@ -19,4 +19,6 @@
     <string name="friday">Friday</string>
     <string name="wednesday">Wednesday</string>
     <string name="tuesday">Tuesday</string>
+    <string name="action_connect">Connect Device</string>
+    <string name="delete">Delete</string>
 </resources>

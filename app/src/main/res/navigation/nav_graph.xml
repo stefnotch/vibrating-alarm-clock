@@ -13,6 +13,8 @@
         <action
                 android:id="@+id/action_FirstFragment_to_SecondFragment"
                 app:destination="@id/SecondFragment"/>
+        <action android:id="@+id/action_FirstFragment_to_SettingsFragment" app:destination="@id/SettingsFragment"/>
+        <action android:id="@+id/action_FirstFragment_to_ConnectFragment" app:destination="@id/ConnectFragment"/>
     </fragment>
     <fragment
             android:id="@+id/SecondFragment"
@@ -28,5 +30,14 @@
         <action
                 android:id="@+id/action_SecondFragment_to_FirstFragment"
                 app:destination="@id/FirstFragment"/>
+    </fragment>
+    <fragment android:id="@+id/ConnectFragment" android:name="com.github.stefnotch.vibratingalarmclock.ConnectFragment"
+              android:label="fragment_connect" tools:layout="@layout/fragment_connect">
+        <action android:id="@+id/action_ConnectFragment_to_FirstFragment" app:destination="@id/FirstFragment"/>
+    </fragment>
+    <fragment android:id="@+id/SettingsFragment"
+              android:name="com.github.stefnotch.vibratingalarmclock.SettingsFragment" android:label="fragment_settings"
+              tools:layout="@layout/fragment_settings">
+        <action android:id="@+id/action_SettingsFragment_to_FirstFragment" app:destination="@id/FirstFragment"/>
     </fragment>
 </navigation>

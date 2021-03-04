@@ -7,11 +7,14 @@ https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/
 ## TODO:
 https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
-https://github.com/android/sunflower/tree/main/app/src/main/java/com/google/samples/apps/sunflower/data
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-https://developer.android.com/guide/topics/ui/layout/recyclerview
-alarm list
+Connect to device
+Schedule alarm (make sure to cancel deleted alarms)
+
+## Extra stuff for later
+- Snooze
+- Enable/disable an alarm
 
 ## Developer information
 

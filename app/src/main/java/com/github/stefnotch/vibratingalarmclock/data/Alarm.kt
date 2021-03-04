@@ -13,6 +13,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import java.util.*
 
 
@@ -72,8 +74,10 @@ class Alarm(time: LocalTime) {
         isRunning = false;
     }
 
+    fun getFormattedTime(): String = time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+
     fun getDaysText(): String {
-        if(isRecurring) return "";
+        if(!isRecurring) return "Once off";
 
         var returnText = "";
         if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) returnText += "Mo";

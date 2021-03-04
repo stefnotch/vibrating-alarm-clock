@@ -1,11 +1,10 @@
 package com.github.stefnotch.vibratingalarmclock
 
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.Navigation
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +26,14 @@ class MainActivity : AppCompatActivity() {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
-            R.id.action_settings -> true
+            R.id.action_connect -> {
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_FirstFragment_to_ConnectFragment)
+                true
+            }
+            R.id.action_settings -> {
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.action_FirstFragment_to_SettingsFragment)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -6,8 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -25,8 +30,11 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        val alarmList = view.findViewById<RecyclerView>(R.id.alarm_list)
+        // alarmList.setHasFixedSize(true)
+        lifecycleScope.launch {
+            val alarmRepository = AlarmRepository(requireContext())
+            alarmList.adapter = AlarmAdapter(alarmRepository.getAll(), findNavController(), lifecycleScope, requireContext())
         }
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {

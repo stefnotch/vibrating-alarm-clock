@@ -18,7 +18,7 @@ class DaysOfTheWeek {
         val Sunday = 1 shl 6;
 
         fun contains(days: Int, day: Int): Boolean {
-            return days and day !== 0
+            return days and day != 0
         }
     }
 }

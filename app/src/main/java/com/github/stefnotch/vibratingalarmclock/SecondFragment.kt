@@ -64,22 +64,23 @@ class SecondFragment : Fragment() {
                 okButton.isEnabled = !it?.toString().isNullOrBlank()
             }
 
-            view.findViewById<Button>(R.id.time_input).setOnClickListener {
+            val timeInput = view.findViewById<Button>(R.id.time_input)
+            timeInput.setOnClickListener {
                 val timePicker = MaterialTimePicker.Builder()
                     //.setTimeFormat(TimeFormat.CLOCK_24H)
-                    .setHour(alarm.time.hour) // TODO: Create/open an alarm and show its time
+                    .setHour(alarm.time.hour)
                     .setMinute(alarm.time.minute)
                     .build()
 
                 timePicker.addOnPositiveButtonClickListener {
                     alarm.time = alarm.time.withHour(timePicker.hour).withMinute(timePicker.minute)
+                    timeInput.text = alarm.getFormattedTime()
                 }
 
                 timePicker.show(requireActivity().supportFragmentManager, "time_input_tag")
             }
 
-            view.findViewById<Button>(R.id.time_input)
-                .setText(alarm.time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
+            timeInput.text = alarm.getFormattedTime()
 
             val isRecurringInput = view.findViewById<CheckBox>(R.id.is_recurring)
             isRecurringInput.isChecked = alarm.isRecurring
