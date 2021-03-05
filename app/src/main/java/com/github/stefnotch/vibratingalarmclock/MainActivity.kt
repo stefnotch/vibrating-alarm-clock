@@ -18,6 +18,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
+
+        // menu.findItem(R.id.action_connect).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        // TODO: Hold onto the menu and show that connect button if we aren't connected
+
         return true
     }
 

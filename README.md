@@ -9,12 +9,13 @@ https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-Connect to device
 Schedule alarm (make sure to cancel deleted alarms)
+Connect to device
+
 
 ## Extra stuff for later
+- TODO: Hold onto the menu and show that connect button if we aren't connected
 - Snooze
-- Enable/disable an alarm
 
 ## Developer information
 

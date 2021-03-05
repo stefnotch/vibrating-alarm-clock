@@ -33,6 +33,7 @@ class Alarm(time: LocalTime) {
     var isRunning = false;
 
     fun scheduleAlarm(context: Context) {
+        if(isRunning) return
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
 
         val intent = Intent(context, AlarmBroadcastReceiver::class.java);
@@ -64,6 +65,8 @@ class Alarm(time: LocalTime) {
     }
 
     fun cancelAlarm(context: Context) {
+        if(!isRunning) return
+
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
 
         alarmManager.cancel(

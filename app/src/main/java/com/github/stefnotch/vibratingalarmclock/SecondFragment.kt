@@ -109,6 +109,7 @@ class SecondFragment : Fragment() {
             okButton.setOnClickListener {
                 lifecycleScope.launch {
                     alarm.title = textInput.text.toString()
+                    alarm.scheduleAlarm(requireContext())
                     if(isNewAlarm) {
                         alarmRepository.insert(alarm)
                     } else {

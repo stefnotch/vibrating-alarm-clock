@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.switchmaterial.SwitchMaterial
 import kotlinx.coroutines.launch
 
 class AlarmAdapter(private var alarms: List<Alarm>, private val navController: NavController, private val lifecycleScope: LifecycleCoroutineScope, private val context: Context) : RecyclerView.Adapter<AlarmAdapter.ViewHolder>() {
@@ -65,6 +66,7 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
         val nameElement: TextView = itemView.findViewById<TextView>(R.id.alarm_name)
         val timeElement: TextView = itemView.findViewById<TextView>(R.id.alarm_time)
         val daysElement: TextView = itemView.findViewById<TextView>(R.id.alarm_days)
+        val isRunningElement: SwitchMaterial = itemView.findViewById<SwitchMaterial>(R.id.alarm_enable)
         init {
             card.setOnLongClickListener {
                 card.isChecked = !card.isChecked
@@ -83,9 +85,22 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
         viewHolder.nameElement.text = alarms[position].title
         viewHolder.timeElement.text = alarms[position].getFormattedTime()
         viewHolder.daysElement.text = alarms[position].getDaysText()
+        viewHolder.isRunningElement.isChecked = alarms[position].isRunning
         viewHolder.card.setOnClickListener {
             navController.navigate(FirstFragmentDirections.actionFirstFragmentToSecondFragment(alarms[position].id))
         }
+        viewHolder.isRunningElement.setOnClickListener {
+            if(viewHolder.isRunningElement.isChecked) {
+                alarms[position].scheduleAlarm(context)
+            } else {
+                alarms[position].cancelAlarm(context)
+            }
+            lifecycleScope.launch  {
+                val alarmRepository = AlarmRepository(context)
+                alarmRepository.update(alarms[position])
+            }
+        }
+
         viewHolder.card.isChecked = checkedAlarmPositions.contains(position)
         viewHolder.card.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked) {
