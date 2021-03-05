@@ -46,21 +46,20 @@ class Alarm(time: LocalTime) {
         fun createIntent(context: Context, alarm: Alarm, day: Int): Intent {
             val intent = Intent(context, AlarmBroadcastReceiver::class.java)
             intent.action = ACTION_ALARM
-            intent.putExtra("title", alarm.title)
-            intent.putExtra("time-hour", alarm.time.hour)
-            intent.putExtra("time-minute", alarm.time.minute)
-            intent.putExtra("time-second", alarm.time.second)
-            intent.putExtra("time-nano", alarm.time.nano)
-            intent.putExtra("is-recurring", alarm.isRecurring)
-            intent.putExtra("day", day)
+            intent.putExtra("id", alarm.id)
 
             return intent
         }
     }
 
     fun scheduleAlarm(context: Context) {
-        if(isRunning) return
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        if(isRunning) {
+            alarmManager.cancel(
+                PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
+            );
+        }
 
         if(!isRecurring) {
             val intent = createIntent(context, this, DaysOfTheWeek.None)
@@ -122,7 +121,6 @@ class Alarm(time: LocalTime) {
             pendingIntent
         )
     }
-
 
     fun cancelAlarm(context: Context) {
         if(!isRunning) return

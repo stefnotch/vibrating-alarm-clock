@@ -5,10 +5,8 @@ A little Android alarm clock that talks to a vibrator
 https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
-https://github.com/learntodroid/SimpleAlarmClock/blob/8b5901e7d37182479a3accdbfd6997b0f7c8f39c/app/src/main/AndroidManifest.xml
 
-Alarm Ring foreground service (with snooze?)
-Alarm Reschedule service (like, on startup and also after an alarm got stopped)
+Alarm Ring foreground service (with snooze and repeating fired alarms)
 Connect to device
 
 

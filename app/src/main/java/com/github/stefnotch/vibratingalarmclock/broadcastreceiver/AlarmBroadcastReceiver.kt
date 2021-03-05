@@ -4,23 +4,20 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
+import com.github.stefnotch.vibratingalarmclock.service.AlarmRescheduleService
+import com.github.stefnotch.vibratingalarmclock.service.AlarmTriggeredService
 
 class AlarmBroadcastReceiver: BroadcastReceiver() {
 
     // Gets called when the device boots or when an alarm actually fires
     override fun onReceive(context: Context?, intent: Intent?) {
         when(intent?.action) {
-            Intent.ACTION_BOOT_COMPLETED -> startRescheduleAlarmService(context)
-            Alarm.ACTION_ALARM -> startAlarmService(context, intent)
+            Intent.ACTION_BOOT_COMPLETED -> context?.startForegroundService(Intent(context, AlarmRescheduleService::class.java))
+            Alarm.ACTION_ALARM -> {
+                val alarmTriggerIntent = Intent(context, AlarmTriggeredService::class.java)
+                alarmTriggerIntent.putExtra("id", intent.getStringExtra("id"))
+                context?.startForegroundService(alarmTriggerIntent)
+            }
         }
     }
-
-    private fun startAlarmService(context: Context?, intent: Intent) {
-        TODO("Not yet implemented")
-    }
-
-    private fun startRescheduleAlarmService(context: Context?) {
-        TODO("Not yet implemented")
-    }
-
 }
