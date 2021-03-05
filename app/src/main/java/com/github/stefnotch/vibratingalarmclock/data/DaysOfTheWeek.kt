@@ -1,10 +1,6 @@
 package com.github.stefnotch.vibratingalarmclock.data
 
-import android.R.id
-import android.R.id.mask
-
-
-
+import java.time.DayOfWeek
 
 class DaysOfTheWeek {
     companion object {
@@ -19,6 +15,19 @@ class DaysOfTheWeek {
 
         fun contains(days: Int, day: Int): Boolean {
             return days and day != 0
+        }
+
+        fun getJavaDayOfWeek(day: Int): DayOfWeek? {
+            return when(day) {
+                Monday -> DayOfWeek.MONDAY
+                Tuesday -> DayOfWeek.TUESDAY
+                Wednesday -> DayOfWeek.WEDNESDAY
+                Thursday -> DayOfWeek.THURSDAY
+                Friday -> DayOfWeek.FRIDAY
+                Saturday -> DayOfWeek.SATURDAY
+                Sunday -> DayOfWeek.SUNDAY
+                else -> null
+            }
         }
     }
 }
