@@ -9,7 +9,7 @@ https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-Schedule alarm (make sure to cancel deleted alarms)
+Schedule alarm
 Connect to device
 
 

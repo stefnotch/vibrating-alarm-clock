@@ -31,6 +31,16 @@ class Alarm(time: LocalTime) {
 
     var isRunning = false;
 
+    companion object {
+        private var toast: Toast? = null
+
+        fun showMessage(context: Context, text: String) {
+            toast?.cancel()
+            toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+            toast?.show()
+        }
+    }
+
     fun scheduleAlarm(context: Context) {
         if(isRunning) return
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
@@ -63,6 +73,7 @@ class Alarm(time: LocalTime) {
             if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) scheduleAlarmForDay(context, alarmManager, DaysOfTheWeek.Sunday)
         }
 
+        showMessage(context, "Scheduled Alarm")
         isRunning = true;
     }
 
@@ -125,8 +136,7 @@ class Alarm(time: LocalTime) {
         alarmManager.cancel(
             PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
         );
-
-        Toast.makeText(context, "Cancelled Alarm", Toast.LENGTH_SHORT).show();
+        showMessage(context, "Cancelled Alarm")
         isRunning = false;
     }
 

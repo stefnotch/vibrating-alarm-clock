@@ -29,6 +29,7 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
                     lifecycleScope.launch  {
                         val alarmRepository = AlarmRepository(context)
                         checkedAlarmPositions.forEach { position ->
+                            alarms[position].cancelAlarm(context)
                             alarmRepository.delete(alarms[position])
                         }
                         alarms = alarmRepository.getAll()
