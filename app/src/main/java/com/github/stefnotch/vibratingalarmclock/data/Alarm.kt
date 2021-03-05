@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.stefnotch.vibratingalarmclock.BuildConfig
 import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -32,12 +33,28 @@ class Alarm(time: LocalTime) {
     var isRunning = false;
 
     companion object {
+        val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
+
         private var toast: Toast? = null
 
         fun showMessage(context: Context, text: String) {
             toast?.cancel()
             toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
             toast?.show()
+        }
+
+        fun createIntent(context: Context, alarm: Alarm, day: Int): Intent {
+            val intent = Intent(context, AlarmBroadcastReceiver::class.java)
+            intent.action = ACTION_ALARM
+            intent.putExtra("title", alarm.title)
+            intent.putExtra("time-hour", alarm.time.hour)
+            intent.putExtra("time-minute", alarm.time.minute)
+            intent.putExtra("time-second", alarm.time.second)
+            intent.putExtra("time-nano", alarm.time.nano)
+            intent.putExtra("is-recurring", alarm.isRecurring)
+            intent.putExtra("day", day)
+
+            return intent
         }
     }
 
@@ -46,14 +63,7 @@ class Alarm(time: LocalTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
 
         if(!isRecurring) {
-            val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-            intent.putExtra("title", title)
-            intent.putExtra("time-hour", time.hour)
-            intent.putExtra("time-minute", time.minute)
-            intent.putExtra("time-second", time.second)
-            intent.putExtra("time-nano", time.nano)
-            intent.putExtra("is-recurring", isRecurring)
-            intent.putExtra("day", DaysOfTheWeek.None)
+            val intent = createIntent(context, this, DaysOfTheWeek.None)
 
             val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
@@ -78,14 +88,7 @@ class Alarm(time: LocalTime) {
     }
 
     private fun scheduleAlarmForDay(context: Context, alarmManager: AlarmManager, day: Int) {
-        val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-        intent.putExtra("title", title)
-        intent.putExtra("time-hour", time.hour)
-        intent.putExtra("time-minute", time.minute)
-        intent.putExtra("time-second", time.second)
-        intent.putExtra("time-nano", time.nano)
-        intent.putExtra("is-recurring", isRecurring)
-        intent.putExtra("day", day)
+        val intent = createIntent(context, this, day)
 
         val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
@@ -104,14 +107,7 @@ class Alarm(time: LocalTime) {
     fun scheduleAlarmForNextDay(context: Context, day: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
 
-        val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-        intent.putExtra("title", title)
-        intent.putExtra("time-hour", time.hour)
-        intent.putExtra("time-minute", time.minute)
-        intent.putExtra("time-second", time.second)
-        intent.putExtra("time-nano", time.nano)
-        intent.putExtra("is-recurring", isRecurring)
-        intent.putExtra("day", day)
+        val intent = createIntent(context, this, day)
 
         val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
