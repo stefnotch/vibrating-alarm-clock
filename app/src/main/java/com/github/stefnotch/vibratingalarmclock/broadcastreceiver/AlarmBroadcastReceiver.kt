@@ -1,13 +1,11 @@
 package com.github.stefnotch.vibratingalarmclock.broadcastreceiver
 
-import android.app.job.JobScheduler
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
-import com.github.stefnotch.vibratingalarmclock.service.AlarmRescheduleService
-import com.github.stefnotch.vibratingalarmclock.service.AlarmTriggeredService
+import com.github.stefnotch.vibratingalarmclock.service.AlarmRescheduleJobService
 import com.github.stefnotch.vibratingalarmclock.service.AlarmTriggeredJobService
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
@@ -16,7 +14,9 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             Intent.ACTION_BOOT_COMPLETED -> {
-                context?.startForegroundService(Intent(context, AlarmRescheduleService::class.java))
+                if(context != null) {
+                    AlarmRescheduleJobService.scheduleJob(context)
+                }
             }
             Alarm.ACTION_ALARM -> {
                 if (context != null) {

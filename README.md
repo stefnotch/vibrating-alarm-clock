@@ -6,7 +6,7 @@ https://developer.android.com/training/scheduling/alarms#boot
 https://stackoverflow.com/a/33110418
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-Use JobScheduler and JobService instead, see https://stackoverflow.com/a/56534432
+
 Alarm Ring foreground service (with snooze and repeating fired alarms)
 Connect to device
 
@@ -18,5 +18,5 @@ Connect to device
 
 ## Developer information
 
-Uses this library https://github.com/NordicSemiconductor/Android-BLE-Library
-Very much based on https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/
+- Uses this library https://github.com/NordicSemiconductor/Android-BLE-Library
+- Very much based on https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/

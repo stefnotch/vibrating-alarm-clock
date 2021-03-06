@@ -15,6 +15,7 @@ import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
 import kotlinx.coroutines.*
 
+// I'm using jobs because https://stackoverflow.com/a/56534432
 class AlarmTriggeredJobService: JobService() {
     companion object {
         private const val JOB_ID = 1
