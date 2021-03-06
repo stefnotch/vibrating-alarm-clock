@@ -36,11 +36,14 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                     }
                 }
 
-                // TODO: Stop alarm and update database
+                // Alarm has happened and optionally, a new one (next week) has been scheduled
+                // TODO: Stop vibrations
+
             }
             Alarm.ACTION_SNOOZE_ALARM -> {
-                // TODO: Stop alarm and schedule snoozed alarm (5 minutes)
-                // TODO: Update database
+                // TODO: Stop vibrations
+                // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interefere with the optional next week alarm
+
             }
         }
     }

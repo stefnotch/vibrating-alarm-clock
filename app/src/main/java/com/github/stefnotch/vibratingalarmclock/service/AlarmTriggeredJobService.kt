@@ -73,6 +73,7 @@ class AlarmTriggeredJobService: JobService() {
                         .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, 0))
                         .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, 0))
                         //.setDeleteIntent()
+                        .setOngoing(true)
                         .setAutoCancel(true)
                         .build()
 

@@ -66,7 +66,6 @@ class Alarm(time: LocalTime) {
 
         if(!isRecurring) {
             val intent = createIntent(context, this, DaysOfTheWeek.None)
-
             val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
             val localDate = if (time <= LocalTime.now()) LocalDate.now().plusDays(1) else LocalDate.now()
@@ -75,7 +74,6 @@ class Alarm(time: LocalTime) {
                 AlarmManager.AlarmClockInfo(LocalDateTime.of(localDate, time).toInstant(OffsetDateTime.now().offset).toEpochMilli(), pendingIntent),
                 pendingIntent
             )
-
 
         } else {
             if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) scheduleAlarmForDay(context, alarmManager, DaysOfTheWeek.Monday)
@@ -112,7 +110,6 @@ class Alarm(time: LocalTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = createIntent(context, this, day)
-
         val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
         val date = LocalDateTime.now()
