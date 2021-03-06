@@ -11,29 +11,29 @@ import androidx.room.PrimaryKey
 import com.github.stefnotch.vibratingalarmclock.BuildConfig
 import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
 import java.time.*
+import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
-import java.time.temporal.TemporalAdjuster
 import java.time.temporal.TemporalAdjusters
-import java.util.*
 
 
 @Entity(tableName = "alarms")
 class Alarm(time: LocalTime) {
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    var id: Int = 0; // Should be readonly, whatever
+    var id: Int = 0 // Should be readonly, whatever
 
-    var title = "";
-    var time = time;
+    var title = ""
+    var time = time // Relative to the current time zone!
 
-    var isRecurring = false; // If it repeats on some day(s) of the week
-    var days = DaysOfTheWeek.None;
+    var isRecurring = false // If it repeats on some day(s) of the week
+    var days = DaysOfTheWeek.None
 
-    var isRunning = false;
+    var isRunning = false
 
     companion object {
-        val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
+        const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
 
         private var toast: Toast? = null
 
@@ -47,6 +47,7 @@ class Alarm(time: LocalTime) {
             val intent = Intent(context, AlarmBroadcastReceiver::class.java)
             intent.action = ACTION_ALARM
             intent.putExtra("id", alarm.id)
+            intent.putExtra("day", day)
 
             return intent
         }
@@ -58,7 +59,7 @@ class Alarm(time: LocalTime) {
         if(isRunning) {
             alarmManager.cancel(
                 PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
-            );
+            )
         }
 
         if(!isRecurring) {
@@ -66,12 +67,14 @@ class Alarm(time: LocalTime) {
 
             val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
-            val localDate = if (time <= LocalTime.now()) LocalDate.now().plusDays(1) else LocalDate.now();
+            val localDate = if (time <= LocalTime.now()) LocalDate.now().plusDays(1) else LocalDate.now()
 
             alarmManager.setAlarmClock(
-                AlarmManager.AlarmClockInfo(LocalDateTime.of(localDate, time).toInstant(ZoneOffset.UTC).epochSecond, pendingIntent),
+                AlarmManager.AlarmClockInfo(LocalDateTime.of(localDate, time).toInstant(OffsetDateTime.now().offset).toEpochMilli(), pendingIntent),
                 pendingIntent
             )
+
+
         } else {
             if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) scheduleAlarmForDay(context, alarmManager, DaysOfTheWeek.Monday)
             if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Tuesday)) scheduleAlarmForDay(context, alarmManager, DaysOfTheWeek.Tuesday)
@@ -83,7 +86,7 @@ class Alarm(time: LocalTime) {
         }
 
         showMessage(context, "Scheduled Alarm")
-        isRunning = true;
+        isRunning = true
     }
 
     private fun scheduleAlarmForDay(context: Context, alarmManager: AlarmManager, day: Int) {
@@ -98,13 +101,13 @@ class Alarm(time: LocalTime) {
         }
 
         alarmManager.setAlarmClock(
-            AlarmManager.AlarmClockInfo(dateTime.toInstant(ZoneOffset.UTC).epochSecond, pendingIntent),
+            AlarmManager.AlarmClockInfo(dateTime.toInstant(OffsetDateTime.now().offset).toEpochMilli(), pendingIntent),
             pendingIntent
         )
     }
 
     fun scheduleAlarmForNextDay(context: Context, day: Int) {
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = createIntent(context, this, day)
 
@@ -114,10 +117,10 @@ class Alarm(time: LocalTime) {
             .plusHours(1)
             .with(TemporalAdjusters.next(DaysOfTheWeek.getJavaDayOfWeek(day)))
             .toLocalDate()
-        var dateTime = LocalDateTime.of(date, time)
+        val dateTime = LocalDateTime.of(date, time)
 
         alarmManager.setAlarmClock(
-            AlarmManager.AlarmClockInfo(dateTime.toInstant(ZoneOffset.UTC).epochSecond, pendingIntent),
+            AlarmManager.AlarmClockInfo(dateTime.toInstant(OffsetDateTime.now().offset).toEpochMilli(), pendingIntent),
             pendingIntent
         )
     }
@@ -125,29 +128,42 @@ class Alarm(time: LocalTime) {
     fun cancelAlarm(context: Context) {
         if(!isRunning) return
 
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager;
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         alarmManager.cancel(
             PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
-        );
+        )
         showMessage(context, "Cancelled Alarm")
-        isRunning = false;
+        isRunning = false
     }
 
-    fun getFormattedTime(): String = time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+    fun getFormattedTime(context: Context): String {
+        // This is downright silly
+        // See https://github.com/JakeWharton/ThreeTenABP/issues/16
+
+        val config = context.resources.configuration
+        val locale = config.locales.let { if(it.isEmpty) java.util.Locale.getDefault() else it.get(0) }
+
+        val legacyFormat = android.text.format.DateFormat.getTimeFormat(context) as? java.text.SimpleDateFormat
+        return if(legacyFormat == null) {
+            time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).withLocale(locale))
+        } else {
+            time.format(DateTimeFormatterBuilder().appendPattern(legacyFormat.toPattern()).toFormatter(locale).withChronology(IsoChronology.INSTANCE))
+        }
+    }
 
     fun getDaysText(): String {
-        if(!isRecurring) return "Once off";
+        if(!isRecurring) return "Once off"
 
-        var returnText = "";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) returnText += "Mo";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Tuesday)) returnText += "Tu";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Wednesday)) returnText += "We";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Thursday)) returnText += "Th";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Friday)) returnText += "Fr";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Saturday)) returnText += "Sa";
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) returnText += "Su";
+        var returnText = ""
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) returnText += "Mo"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Tuesday)) returnText += "Tu"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Wednesday)) returnText += "We"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Thursday)) returnText += "Th"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Friday)) returnText += "Fr"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Saturday)) returnText += "Sa"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) returnText += "Su"
 
-        return returnText;
+        return returnText
     }
 }

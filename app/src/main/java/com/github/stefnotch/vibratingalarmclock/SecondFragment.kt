@@ -1,6 +1,7 @@
 package com.github.stefnotch.vibratingalarmclock
 
 import android.os.Bundle
+import android.text.format.DateFormat
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -67,20 +68,20 @@ class SecondFragment : Fragment() {
             val timeInput = view.findViewById<Button>(R.id.time_input)
             timeInput.setOnClickListener {
                 val timePicker = MaterialTimePicker.Builder()
-                    //.setTimeFormat(TimeFormat.CLOCK_24H)
+                    .setTimeFormat(if(DateFormat.is24HourFormat(requireContext())) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H)
                     .setHour(alarm.time.hour)
                     .setMinute(alarm.time.minute)
                     .build()
 
                 timePicker.addOnPositiveButtonClickListener {
                     alarm.time = alarm.time.withHour(timePicker.hour).withMinute(timePicker.minute)
-                    timeInput.text = alarm.getFormattedTime()
+                    timeInput.text = alarm.getFormattedTime(requireContext())
                 }
 
                 timePicker.show(requireActivity().supportFragmentManager, "time_input_tag")
             }
 
-            timeInput.text = alarm.getFormattedTime()
+            timeInput.text = alarm.getFormattedTime(requireContext())
 
             val isRecurringInput = view.findViewById<CheckBox>(R.id.is_recurring)
             isRecurringInput.isChecked = alarm.isRecurring
