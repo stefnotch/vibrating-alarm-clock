@@ -1,16 +1,20 @@
 package com.github.stefnotch.vibratingalarmclock.service
 
+import android.app.PendingIntent
 import android.app.job.JobInfo
 import android.app.job.JobParameters
 import android.app.job.JobScheduler
 import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.PersistableBundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.stefnotch.vibratingalarmclock.R
 import com.github.stefnotch.vibratingalarmclock.application.App
+import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
+import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
 import kotlinx.coroutines.*
@@ -41,7 +45,7 @@ class AlarmTriggeredJobService: JobService() {
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        val alarmId = if(params?.extras?.containsKey("id") == true) params?.extras?.getInt("id", 0) else null
+        val alarmId = if(params?.extras?.containsKey("id") == true) params.extras.getInt("id", 0) else null
         val alarmDay = params?.extras?.getInt("day", DaysOfTheWeek.None) ?: DaysOfTheWeek.None
         if(alarmId != null) {
             serviceScope.launch {
@@ -49,14 +53,26 @@ class AlarmTriggeredJobService: JobService() {
                     val alarmRepository = AlarmRepository(applicationContext)
                     val alarm = alarmRepository.get(alarmId)
 
+                    val stopAlarmIntent = Intent(applicationContext, AlarmBroadcastReceiver::class.java).apply {
+                        action = Alarm.ACTION_STOP_ALARM
+                        putExtra("id", alarmId)
+                    }
+
+                    val snoozeAlarmIntent = Intent(applicationContext, AlarmBroadcastReceiver::class.java).apply {
+                        action = Alarm.ACTION_SNOOZE_ALARM
+                        putExtra("id", alarmId)
+                    }
+
                     val notification = NotificationCompat.Builder(applicationContext, App.CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_alarm_24)
                         .setCategory(NotificationCompat.CATEGORY_ALARM)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentTitle("Snooze alarm" )
-                        .setContentText(alarm?.title ?: "Alarm not found")
-                        .setContentInfo(alarm?.getFormattedTime(applicationContext))
+                        .setContentText(alarm?.getFormattedTime(applicationContext) + (alarm?.title ?: "Alarm not found"))
+                        .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, 0))
+                        .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, 0))
+                        //.setDeleteIntent()
                         .setAutoCancel(true)
                         .build()
 
@@ -64,11 +80,13 @@ class AlarmTriggeredJobService: JobService() {
                         notify(alarmId, notification)
                     }
 
-                    // TODO: Do something when you click on it (snooze)
-                    // TODO: Stop butt-on
+                    // TODO: Aggressively vibrate until something happens
 
                     if(alarm?.isRecurring == true && alarmDay != DaysOfTheWeek.None) {
                         alarm.scheduleAlarmForNextDay(applicationContext, alarmDay)
+                    } else if(alarm != null) {
+                        alarm.isRunning = false
+                        alarmRepository.update(alarm)
                     }
                     restartOnDestroy = false
                     jobFinished(params, false)
