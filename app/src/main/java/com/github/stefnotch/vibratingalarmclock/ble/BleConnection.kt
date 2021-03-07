@@ -2,19 +2,18 @@ package com.github.stefnotch.vibratingalarmclock.ble
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import com.github.stefnotch.vibratingalarmclock.data.AppDatabase
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 
 class BleConnection : ConnectionObserver {
     private var manager: LipstickBleManager? = null
     private var isScanning = false
+    private var isVibrating = false
     private val scanCallback = object :ScanCallback() {
 
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
@@ -73,7 +72,7 @@ class BleConnection : ConnectionObserver {
         stopScanning()
         if(results != null) {
             // TODO: Maybe there is a better way of doing this
-            val lipstick = results?.find { result -> result.isConnectable && (result.scanRecord?.deviceName?.equals("Lipstick", true) == true) }?.device
+            val lipstick = results.find { result -> result.isConnectable && (result.scanRecord?.deviceName?.equals("Lipstick", true) == true) }?.device
             if(lipstick != null) {
                 connect(lipstick, context)
                 return true
@@ -84,26 +83,36 @@ class BleConnection : ConnectionObserver {
     }
 
     fun startVibrating() {
+        isVibrating = true
         // TODO: Make this rock-solid
+        var vibrationRunnable: Runnable? = null
 
-        val vibrationRunnable = {
-            var strength1 = (Math.random() * 0xff).toInt().toByte()
-            var strength2 = (Math.random() * 0xff).toInt().toByte()
-            if(strength1 < 0x70) {
-                strength1 = 0x70
+        vibrationRunnable = Runnable {
+            if(isVibrating) {
+                var strength1 = (Math.random() * 0xff).toInt().toByte()
+                val strength2 = (Math.random() * 0xff).toInt().toByte()
+                if (strength1 < 0x70) {
+                    strength1 = 0x70
+                }
+                manager?.vibrate(strength1, strength2)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    manager?.vibrate(0, 0)
+                }, 1000)
+
+                vibrationRunnable?.let {
+                    Handler(Looper.getMainLooper()).postDelayed(
+                        it,
+                        4500 + (Math.random() * 4000).toLong()
+                    )
+                }
             }
-            manager?.vibrate(strength1, strength2)
-            Handler(Looper.getMainLooper()).postDelayed({
-                manager?.vibrate(0, 0)
-            }, 1000)
-
-            Handler(Looper.getMainLooper()).postDelayed(vibrationRunnable, 4500 + (Math.random() * 4000).toInt())
         }
 
         Handler(Looper.getMainLooper()).postDelayed(vibrationRunnable, 1000)
     }
 
     fun stopVibrating() {
+        isVibrating = false
         manager?.vibrate(0,0)
     }
 
