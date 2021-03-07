@@ -4,7 +4,6 @@ A little Android alarm clock that talks to a vibrator
 ## TODO:
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-Permissions
 Scan for devices
 Connect to device
 Vibrate
