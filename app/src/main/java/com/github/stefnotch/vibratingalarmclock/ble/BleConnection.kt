@@ -97,7 +97,7 @@ class BleConnection : ConnectionObserver {
                 manager?.vibrate(strength1, strength2)
                 Handler(Looper.getMainLooper()).postDelayed({
                     manager?.vibrate(0, 0)
-                }, 1000)
+                }, 2000)
 
                 vibrationRunnable?.let {
                     Handler(Looper.getMainLooper()).postDelayed(
