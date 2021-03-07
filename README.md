@@ -3,6 +3,8 @@ A little Android alarm clock that talks to a vibrator
 
 ## TODO:
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
+https://github.com/NordicSemiconductor/Android-nRF-Blinky/blob/master/app/src/main/java/no/nordicsemi/android/blinky/viewmodels/ScannerViewModel.java
+https://punchthrough.com/android-ble-guide/
 
 Persistent bluetooth connection
 
