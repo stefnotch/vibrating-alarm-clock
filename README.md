@@ -4,11 +4,12 @@ A little Android alarm clock that talks to a vibrator
 ## TODO:
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-Scan for devices
-Connect to device
-Vibrate
+Connect to device (connectToLipstick)
+Vibrate (and do it randomly)
 
 ## Extra stuff for later
+- Auto reconnect on (alarm)restart
+- Show scan results
 - Show that connect button if we aren't connected
 - Warn on missing location (turned off) and better permissions management
 - Snooze

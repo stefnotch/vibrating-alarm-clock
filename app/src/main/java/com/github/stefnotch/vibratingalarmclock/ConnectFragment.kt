@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
+import com.github.stefnotch.vibratingalarmclock.ble.LipstickBleManager
 import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
@@ -49,7 +51,10 @@ class ConnectFragment : Fragment() {
                 continuePermissionsChecks()
             }
         }
-        // view.findViewById<Button>(R.id.button_connect)
+        view.findViewById<Button>(R.id.button_connect).setOnClickListener {
+            val ble = BleConnection.getInstance()
+            ble.connectToLipstick(requireContext())
+        }
     }
 
     private fun continuePermissionsChecks() {
@@ -62,8 +67,17 @@ class ConnectFragment : Fragment() {
         } else {
             val textView = view?.findViewById<TextView>(R.id.connect_text_view)
             if(textView != null) {
-                textView.text = "lala"
+                val ble = BleConnection.getInstance()
+                ble.startScanning()
+                textView.text = "scanning..." // TODO: Show scan results
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        val ble = BleConnection.getInstance()
+        ble.stopScanning()
     }
 }
