@@ -13,6 +13,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.stefnotch.vibratingalarmclock.R
 import com.github.stefnotch.vibratingalarmclock.application.App
+import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.AlarmRepository
@@ -81,7 +82,8 @@ class AlarmTriggeredJobService: JobService() {
                         notify(alarmId, notification)
                     }
 
-                    // TODO: Aggressively vibrate until something happens
+                    val ble = BleConnection.getInstance()
+                    ble.startVibrating()
 
                     if(alarm?.isRecurring == true && alarmDay != DaysOfTheWeek.None) {
                         alarm.scheduleAlarmForNextDay(applicationContext, alarmDay)

@@ -7,6 +7,8 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.github.stefnotch.vibratingalarmclock.data.AppDatabase
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 
@@ -63,18 +65,33 @@ class BleConnection : ConnectionObserver {
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
 
         scanResults = null
-
         isScanning = false
     }
 
-    fun connectToLipstick(context: Context) {
-        if(scanResults != null) {
-            // scanResults?.find { result -> result. }
+    fun connectToLipstick(context: Context): Boolean {
+        val results = scanResults
+        stopScanning()
+        if(results != null) {
+            // TODO: Maybe there is a better way of doing this
+            val lipstick = results?.find { result -> result.isConnectable && (result.scanRecord?.deviceName?.equals("Lipstick", true) == true) }?.device
+            if(lipstick != null) {
+                connect(lipstick, context)
+                return true
+            }
         }
+
+        return false
     }
 
     fun startVibrating() {
-        //manager.vibrate()
+        Handler(Looper.getMainLooper()).postDelayed({
+            var strength1 = (Math.random() * 0xff).toInt().toByte()
+            var strength2 = (Math.random() * 0xff).toInt().toByte()
+            if(strength1 < 0x70) {
+                strength1 = 0x70
+            }
+            manager?.vibrate(strength1, strength2)
+        }, 1000)
     }
 
     fun stopVibrating() {

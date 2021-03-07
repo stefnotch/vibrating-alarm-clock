@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationManagerCompat
+import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
 import com.github.stefnotch.vibratingalarmclock.service.AlarmRescheduleJobService
@@ -37,11 +38,12 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 }
 
                 // Alarm has happened and optionally, a new one (next week) has been scheduled
-                // TODO: Stop vibrations
-
+                val ble = BleConnection.getInstance()
+                ble.stopVibrating()
             }
             Alarm.ACTION_SNOOZE_ALARM -> {
-                // TODO: Stop vibrations
+                val ble = BleConnection.getInstance()
+                ble.stopVibrating()
                 // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interefere with the optional next week alarm
 
             }

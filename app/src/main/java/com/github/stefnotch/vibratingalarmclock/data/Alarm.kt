@@ -9,6 +9,7 @@ import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.github.stefnotch.vibratingalarmclock.BuildConfig
+import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
 import java.time.*
 import java.time.chrono.IsoChronology
@@ -128,7 +129,8 @@ class Alarm(time: LocalTime) {
     fun cancelAlarm(context: Context) {
         if(!isRunning) return
 
-        // TODO: Stop vibrations
+        val ble = BleConnection.getInstance()
+        ble.stopVibrating()
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
