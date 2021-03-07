@@ -70,6 +70,7 @@ class Alarm(time: LocalTime) {
 
             val localDate = if (time <= LocalTime.now()) LocalDate.now().plusDays(1) else LocalDate.now()
 
+            // Uses this API because https://stackoverflow.com/a/33110418
             alarmManager.setAlarmClock(
                 AlarmManager.AlarmClockInfo(LocalDateTime.of(localDate, time).toInstant(OffsetDateTime.now().offset).toEpochMilli(), pendingIntent),
                 pendingIntent
