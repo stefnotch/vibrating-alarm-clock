@@ -2,18 +2,19 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-https://developer.android.com/training/scheduling/alarms#boot
-https://stackoverflow.com/a/33110418
 https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
 
-
+Permissions
+Scan for devices
 Connect to device
 Vibrate
 
 ## Extra stuff for later
-- TODO: Hold onto the menu and show that connect button if we aren't connected
+- Show that connect button if we aren't connected
+- Warn on missing location (turned off) and better permissions management
 - Snooze
 - https://developer.android.com/training/notify-user/build-notification#urgent-message
+- Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
 
 ## Developer information
 
