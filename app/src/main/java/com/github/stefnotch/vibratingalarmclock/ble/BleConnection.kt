@@ -84,14 +84,23 @@ class BleConnection : ConnectionObserver {
     }
 
     fun startVibrating() {
-        Handler(Looper.getMainLooper()).postDelayed({
+        // TODO: Make this rock-solid
+
+        val vibrationRunnable = {
             var strength1 = (Math.random() * 0xff).toInt().toByte()
             var strength2 = (Math.random() * 0xff).toInt().toByte()
             if(strength1 < 0x70) {
                 strength1 = 0x70
             }
             manager?.vibrate(strength1, strength2)
-        }, 1000)
+            Handler(Looper.getMainLooper()).postDelayed({
+                manager?.vibrate(0, 0)
+            }, 1000)
+
+            Handler(Looper.getMainLooper()).postDelayed(vibrationRunnable, 4500 + (Math.random() * 4000).toInt())
+        }
+
+        Handler(Looper.getMainLooper()).postDelayed(vibrationRunnable, 1000)
     }
 
     fun stopVibrating() {
