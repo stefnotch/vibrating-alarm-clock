@@ -3,6 +3,7 @@ package com.github.stefnotch.vibratingalarmclock.broadcastreceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
@@ -46,6 +47,16 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 ble.stopVibrating()
                 // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interefere with the optional next week alarm
 
+            }
+        }
+
+        if(intent?.action?.startsWith(Alarm.ACTION_ALARM) == true) {
+            if (context != null) {
+                AlarmTriggeredJobService.scheduleJob(
+                    context,
+                    intent.getIntExtra("id", 0),
+                    intent.getIntExtra("day", DaysOfTheWeek.None)
+                )
             }
         }
     }

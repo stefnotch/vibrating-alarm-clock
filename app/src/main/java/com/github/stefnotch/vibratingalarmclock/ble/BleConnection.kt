@@ -6,6 +6,7 @@ import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
+import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.Looper
 import no.nordicsemi.android.ble.observer.ConnectionObserver
@@ -18,22 +19,27 @@ class BleConnection : ConnectionObserver {
 
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
             if(result != null) {
-                scanResults?.add(result)
+                scanResults?.set(result.device.address, result)
+                onChangeScanResults()
             }
         }
 
         override fun onBatchScanResults(results: MutableList<ScanResult>?) {
             if(results != null) {
-                scanResults?.addAll(results)
+                results.forEach {
+                    scanResults?.set(it.device.address, it)
+                }
+                onChangeScanResults()
             }
         }
 
         override fun onScanFailed(errorCode: Int) {
-            // TODO: Handle this
+            onChangeScanResults(errorCode)
             stopScanning()
         }
     }
-    private var scanResults: MutableList<ScanResult>? = null
+    private var scanResults: MutableMap<String, ScanResult>? = null
+    private var scanResultsCallback: (List<String>) -> Unit = {  }
 
     companion object {
         private var instance: BleConnection? = null
@@ -45,16 +51,29 @@ class BleConnection : ConnectionObserver {
         }
     }
 
-    fun startScanning() {
+    private fun onChangeScanResults(errorCode: Int? = null) {
+        if(errorCode == null) {
+            scanResultsCallback(scanResults?.map { (k, v) -> v.scanRecord?.deviceName ?: "" } ?: listOf(""))
+        } else {
+            scanResultsCallback(listOf("An error occurred while scanning: $errorCode"))
+        }
+    }
+
+    fun startScanning(callback: (List<String>) -> Unit) {
         if(isScanning) return
         isScanning = true
 
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        scanResults = mutableListOf()
+        scanResults = mutableMapOf()
+        scanResultsCallback = callback
+        onChangeScanResults()
         // TODO: Figure out ideal scan settings
         bluetoothAdapter.bluetoothLeScanner.startScan(null, ScanSettings.Builder().setReportDelay(500).build(), scanCallback)
 
-        // TODO: Automatically stop scanning after a while
+        // Automatically stop scanning after a while
+        Handler(Looper.getMainLooper()).postDelayed({
+            stopScanning()
+        }, 1000 * 20)
     }
 
     fun stopScanning() {
@@ -64,7 +83,8 @@ class BleConnection : ConnectionObserver {
         bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
 
         scanResults = null
-        isScanning = false
+        scanResultsCallback = { }
+        isScanning = false // TODO: Probably notify the UI of this
     }
 
     fun connectToLipstick(context: Context): Boolean {
@@ -72,7 +92,7 @@ class BleConnection : ConnectionObserver {
         stopScanning()
         if(results != null) {
             // TODO: Maybe there is a better way of doing this
-            val lipstick = results.find { result -> result.isConnectable && (result.scanRecord?.deviceName?.equals("Lipstick", true) == true) }?.device
+            val lipstick = results.values.find { result -> result.isConnectable && (result.scanRecord?.deviceName?.equals("Lipstick", true) == true) }?.device
             if(lipstick != null) {
                 connect(lipstick, context)
                 return true
@@ -117,7 +137,8 @@ class BleConnection : ConnectionObserver {
     }
 
     private fun connect(device: BluetoothDevice, context: Context) {
-        device.createBond() // https://github.com/NordicSemiconductor/Android-BLE-Library/issues/265
+        // Doesn't seem to work with this device
+        // device.createBond() // https://github.com/NordicSemiconductor/Android-BLE-Library/issues/265
 
         manager = LipstickBleManager(context)
         manager?.setConnectionObserver(this)

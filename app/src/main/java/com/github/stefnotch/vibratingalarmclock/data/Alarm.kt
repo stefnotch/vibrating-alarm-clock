@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.room.Entity
@@ -48,7 +49,7 @@ class Alarm(time: LocalTime) {
 
         fun createIntent(context: Context, alarm: Alarm, day: Int): Intent {
             val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-            intent.action = ACTION_ALARM
+            intent.action = ACTION_ALARM + "_" + day // Make sure to generate a unique intent
             intent.putExtra("id", alarm.id)
             intent.putExtra("day", day)
 
@@ -67,9 +68,9 @@ class Alarm(time: LocalTime) {
 
         if(!isRecurring) {
             val intent = createIntent(context, this, DaysOfTheWeek.None)
-            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val localDate = if (time <= LocalTime.now()) LocalDate.now().plusDays(1) else LocalDate.now()
+            val localDate = if (LocalTime.now() >= time) LocalDate.now().plusDays(1) else LocalDate.now()
 
             // Uses this API because https://stackoverflow.com/a/33110418
             alarmManager.setAlarmClock(
@@ -98,7 +99,7 @@ class Alarm(time: LocalTime) {
 
         val date = LocalDate.now().with(TemporalAdjusters.nextOrSame(DaysOfTheWeek.getJavaDayOfWeek(day)))
         var dateTime = LocalDateTime.of(date, time)
-        if(dateTime <= LocalDateTime.now()) {
+        if(LocalDateTime.now() >= dateTime) {
             dateTime = dateTime.with(TemporalAdjusters.next(DaysOfTheWeek.getJavaDayOfWeek(day)))
         }
 

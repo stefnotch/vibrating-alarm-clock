@@ -53,7 +53,7 @@ class LipstickBleManager(context: Context): BleManager(context) {
                     })
                 .add(setPreferredPhy(
                     PhyRequest.PHY_LE_1M_MASK,
-                    PhyRequest.PHY_LE_1M_MASK,
+                    PhyRequest.PHY_LE_2M_MASK,
                     PhyRequest.PHY_OPTION_NO_PREFERRED
                 )
                     .fail { device: BluetoothDevice?, status: Int ->

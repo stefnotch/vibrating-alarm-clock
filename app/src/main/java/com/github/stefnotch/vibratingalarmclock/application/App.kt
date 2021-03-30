@@ -17,8 +17,8 @@ class App: Application() {
     }
 
     private fun createNotificationChannel() {
-        val serviceChannel = NotificationChannel(CHANNEL_ID, "Alarm Service Channel", NotificationManager.IMPORTANCE_DEFAULT)
-            .apply { description = "Vibrating Alarm Clock Notifications" } // Maybe it should be more important?
+        val serviceChannel = NotificationChannel(CHANNEL_ID, "Alarm Service Channel", NotificationManager.IMPORTANCE_HIGH)
+            .apply { description = "Vibrating Alarm Clock Notifications" }
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(serviceChannel)

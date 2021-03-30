@@ -54,6 +54,7 @@ class ConnectFragment : Fragment() {
         view.findViewById<Button>(R.id.button_connect).setOnClickListener {
             val ble = BleConnection.getInstance()
             ble.connectToLipstick(requireContext())
+            // TODO: Check if connection was successful
         }
     }
 
@@ -68,8 +69,10 @@ class ConnectFragment : Fragment() {
             val textView = view?.findViewById<TextView>(R.id.connect_text_view)
             if(textView != null) {
                 val ble = BleConnection.getInstance()
-                ble.startScanning()
-                textView.text = "scanning..." // TODO: Show scan results
+                ble.startScanning {
+                    textView.text = it.joinToString("\n")
+                }
+                textView.text = "Scanning..."
             }
         }
     }

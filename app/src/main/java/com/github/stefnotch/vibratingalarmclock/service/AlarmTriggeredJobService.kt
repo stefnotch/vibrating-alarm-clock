@@ -67,7 +67,7 @@ class AlarmTriggeredJobService: JobService() {
                     val notification = NotificationCompat.Builder(applicationContext, App.CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_alarm_24)
                         .setCategory(NotificationCompat.CATEGORY_ALARM)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentTitle("Snooze alarm" )
                         .setContentText(alarm?.getFormattedTime(applicationContext) + (alarm?.title ?: "Alarm not found"))
