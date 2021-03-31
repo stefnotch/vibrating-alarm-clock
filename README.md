@@ -16,6 +16,7 @@ Persistent bluetooth connection
 - Snooze
 - https://developer.android.com/training/notify-user/build-notification#urgent-message
 - Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
+- Proper name
 
 ## Developer information
 
