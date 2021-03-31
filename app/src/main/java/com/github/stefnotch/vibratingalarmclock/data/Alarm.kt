@@ -60,15 +60,13 @@ class Alarm(time: LocalTime) {
     fun scheduleAlarm(context: Context) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        if(isRunning) {
-            alarmManager.cancel(
-                PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
-            )
-        }
-
         if(!isRecurring) {
             val intent = createIntent(context, this, DaysOfTheWeek.None)
             val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+            if(isRunning) {
+                alarmManager.cancel(pendingIntent)
+            }
 
             val localDate = if (LocalTime.now() >= time) LocalDate.now().plusDays(1) else LocalDate.now()
 
@@ -97,6 +95,10 @@ class Alarm(time: LocalTime) {
 
         val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
 
+        if(isRunning) {
+            alarmManager.cancel(pendingIntent)
+        }
+
         val date = LocalDate.now().with(TemporalAdjusters.nextOrSame(DaysOfTheWeek.getJavaDayOfWeek(day)))
         var dateTime = LocalDateTime.of(date, time)
         if(LocalDateTime.now() >= dateTime) {
@@ -113,7 +115,11 @@ class Alarm(time: LocalTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val intent = createIntent(context, this, day)
-        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        if(isRunning) {
+            alarmManager.cancel(pendingIntent)
+        }
 
         val date = LocalDateTime.now()
             .plusHours(1)
@@ -135,9 +141,17 @@ class Alarm(time: LocalTime) {
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        alarmManager.cancel(
-            PendingIntent.getBroadcast(context, id, Intent(context, AlarmBroadcastReceiver::class.java), 0)
-        )
+        if(!isRecurring) {
+            val intent = createIntent(context, this, DaysOfTheWeek.None)
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            alarmManager.cancel(pendingIntent)
+        } else {
+            DaysOfTheWeek.everyDay().forEach {
+                val intent = createIntent(context, this, it)
+                val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                alarmManager.cancel(pendingIntent)
+            }
+        }
         showMessage(context, "Cancelled Alarm")
         isRunning = false
     }
