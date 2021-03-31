@@ -21,3 +21,4 @@ Persistent bluetooth connection
 
 - Uses this library https://github.com/NordicSemiconductor/Android-BLE-Library
 - Very much based on https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/
+- Debugging: Go to `%localappdata%\Android\Sdk\platform-tools` and then [fire up `adb`](https://stackoverflow.com/questions/3643395/how-to-get-android-crash-logs)
