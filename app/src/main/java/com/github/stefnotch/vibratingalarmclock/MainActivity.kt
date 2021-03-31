@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.Navigation
+import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +20,12 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        // menu.findItem(R.id.action_connect).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-        // TODO: Hold onto the menu and show that connect button if we aren't connected
+        // TODO: Show this when we aren't connected and hide it again once we are actually connected
+        /*
+        if(!BleConnection.getInstance().isConnected()) {
+            menu.findItem(R.id.action_connect)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        }*/
 
         return true
     }

@@ -2,22 +2,23 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
-https://github.com/NordicSemiconductor/Android-nRF-Blinky/blob/master/app/src/main/java/no/nordicsemi/android/blinky/viewmodels/ScannerViewModel.java
-https://punchthrough.com/android-ble-guide/
-
 Persistent bluetooth connection
 - Show "not connected" warning if we aren't connected
 - Snooze
-- Proper icon 
 
 ## Extra stuff for later
 - Auto reconnect on (alarm)restart
-- Show scan results
+- Better scanning interface and faster scanning
 - Show that connect button if we aren't connected
 - Warn on missing location (turned off) and better permissions management
 - https://developer.android.com/training/notify-user/build-notification#urgent-message
 - Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
+- Figure out why the lipstick keeps glowing
+- Tell user if connecting worked and stuff https://punchthrough.com/android-ble-guide/
+- Useful reference https://github.com/NordicSemiconductor/Android-nRF-Blinky/blob/master/app/src/main/java/no/nordicsemi/android/blinky/viewmodels/ScannerViewModel.java
+- Have a background service so that it's not that easy to accidentally cancel the alarm https://victorleungtw.com/write-your-android-app-to-run-in-background-mode-as-a-service
+- Change the alarm receiver to `<receiver android:name=".broadcastreceiver.AlarmBroadcastReceiver" android:process=":remote">`
+  -  https://forums.xamarin.com/discussion/179918/alarm-manager-setrepeating-is-not-working-in-background-and-app-got-killed
 
 ## Developer information
 

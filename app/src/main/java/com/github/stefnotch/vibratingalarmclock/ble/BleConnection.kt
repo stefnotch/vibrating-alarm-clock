@@ -2,6 +2,7 @@ package com.github.stefnotch.vibratingalarmclock.ble
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
@@ -148,6 +149,11 @@ class BleConnection : ConnectionObserver {
             ?.done { /*callback*/ }
             ?.useAutoConnect(true)
             ?.enqueue()
+    }
+
+    fun isConnected(): Boolean {
+        return manager?.connectionState == BluetoothProfile.STATE_CONNECTING ||
+                manager?.connectionState == BluetoothProfile.STATE_CONNECTED
     }
 
     override fun onDeviceConnecting(device: BluetoothDevice) {
