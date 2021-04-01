@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.github.stefnotch.vibratingalarmclock">
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
     <uses-feature
             android:name="android.hardware.bluetooth_le"
-            android:required="true" />
+            android:required="true"/>
+
     <application
             android:name=".application.App"
             android:allowBackup="true"
@@ -29,25 +31,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+                android:name=".AlarmTriggeredActivity"
+                android:showOnLockScreen="true"
+                android:supportsRtl="true"
+                android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
 
-        <activity android:name=".AlarmTriggeredActivity" android:showOnLockScreen="true" />
-
-        <receiver android:name=".broadcastreceiver.AlarmBroadcastReceiver"
-                  android:enabled="true"
-                  android:exported="true"
-                  >
+        <receiver
+                android:name=".broadcastreceiver.AlarmBroadcastReceiver"
+                android:enabled="true"
+                android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.AlarmTriggeredJobService"
-                 android:permission="android.permission.BIND_JOB_SERVICE"
-                 android:enabled="true"
-                 android:exported="true" />
-        <service android:name=".service.AlarmRescheduleJobService"
-                 android:permission="android.permission.BIND_JOB_SERVICE"
-                 android:enabled="true"
-                 android:exported="true" />
+        <service
+                android:name=".service.AlarmTriggeredJobService"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+                android:name=".service.AlarmRescheduleJobService"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
+
 </manifest>

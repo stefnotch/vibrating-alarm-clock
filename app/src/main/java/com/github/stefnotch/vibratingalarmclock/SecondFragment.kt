@@ -110,12 +110,15 @@ class SecondFragment : Fragment() {
             okButton.setOnClickListener {
                 lifecycleScope.launch {
                     alarm.title = textInput.text.toString()
-                    alarm.scheduleAlarm(requireContext())
                     if(isNewAlarm) {
                         alarmRepository.insert(alarm)
                     } else {
                         alarmRepository.update(alarm)
                     }
+                    // Schedule alarm after insertion (because ID)
+                    alarm.scheduleAlarm(requireContext())
+                    // And update again (because isRunning)
+                    alarmRepository.update(alarm)
                     findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
                 }
             }
