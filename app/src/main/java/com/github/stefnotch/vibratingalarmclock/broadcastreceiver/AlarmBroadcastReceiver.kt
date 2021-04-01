@@ -22,7 +22,9 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 }
             }
             Alarm.ACTION_ALARM -> {
+                Log.d("AlarmBroadcastReceiver", "Alarm triggered")
                 if (context != null) {
+                    Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
                     AlarmTriggeredJobService.scheduleJob(
                         context,
                         intent.getIntExtra("id", 0),
@@ -51,7 +53,9 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
         }
 
         if(intent?.action?.startsWith(Alarm.ACTION_ALARM) == true) {
+            Log.d("AlarmBroadcastReceiver", "Alarm triggered")
             if (context != null) {
+                Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
                 AlarmTriggeredJobService.scheduleJob(
                     context,
                     intent.getIntExtra("id", 0),

@@ -2,16 +2,15 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-Persistent bluetooth connection
 - Show "not connected" warning if we aren't connected
 - Snooze
+- Aw, we do need a popup thingy https://developer.android.com/training/notify-user/build-notification#urgent-message
 
 ## Extra stuff for later
 - Auto reconnect on (alarm)restart
 - Better scanning interface and faster scanning
 - Show that connect button if we aren't connected
 - Warn on missing location (turned off) and better permissions management
-- https://developer.android.com/training/notify-user/build-notification#urgent-message
 - Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
 - Figure out why the lipstick keeps glowing
 - Tell user if connecting worked and stuff https://punchthrough.com/android-ble-guide/
@@ -24,4 +23,4 @@ Persistent bluetooth connection
 
 - Uses this library https://github.com/NordicSemiconductor/Android-BLE-Library
 - Very much based on https://learntodroid.com/how-to-create-a-simple-alarm-clock-app-in-android/
-- Debugging: Go to `%localappdata%\Android\Sdk\platform-tools` and then [fire up `adb`](https://stackoverflow.com/questions/3643395/how-to-get-android-crash-logs)
+- Debugging: Go to `%localappdata%\Android\Sdk\platform-tools` and then [fire up `adb logcat`](https://stackoverflow.com/questions/3643395/how-to-get-android-crash-logs)

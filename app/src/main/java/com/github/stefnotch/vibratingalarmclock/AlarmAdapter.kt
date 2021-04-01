@@ -83,7 +83,8 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.nameElement.text = alarms[position].title
+        val debugId = alarms[position].id
+        viewHolder.nameElement.text = alarms[position].title + "($debugId)"
         viewHolder.timeElement.text = alarms[position].getFormattedTime(context)
         viewHolder.daysElement.text = alarms[position].getDaysText()
         viewHolder.isRunningElement.isChecked = alarms[position].isRunning

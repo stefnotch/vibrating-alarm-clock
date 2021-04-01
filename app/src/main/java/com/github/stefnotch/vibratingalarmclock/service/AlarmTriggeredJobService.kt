@@ -11,6 +11,7 @@ import android.content.Intent
 import android.os.PersistableBundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.github.stefnotch.vibratingalarmclock.AlarmTriggeredActivity
 import com.github.stefnotch.vibratingalarmclock.R
 import com.github.stefnotch.vibratingalarmclock.application.App
 import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
@@ -64,15 +65,21 @@ class AlarmTriggeredJobService: JobService() {
                         putExtra("id", alarmId)
                     }
 
+                    val fullscreenAlarmIntent = Intent(applicationContext, AlarmTriggeredActivity::class.java).apply {
+                        action = Alarm.ACTION_ALARM_TRIGGERED
+                        putExtra("id", alarmId)
+                    }
+
                     val notification = NotificationCompat.Builder(applicationContext, App.CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_alarm_24)
                         .setCategory(NotificationCompat.CATEGORY_ALARM)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                         .setContentTitle("Snooze alarm" )
-                        .setContentText(alarm?.getFormattedTime(applicationContext) + (alarm?.title ?: "Alarm not found"))
-                        .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, 0))
-                        .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, 0))
+                        .setContentText(alarm?.getFormattedTime(applicationContext) + " " + (alarm?.title ?: "Alarm with $alarmId not found"))
+                        .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+                        .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+                        .setFullScreenIntent(PendingIntent.getBroadcast(applicationContext, alarmId, fullscreenAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT), true)
                         //.setDeleteIntent()
                         .setOngoing(true)
                         .setAutoCancel(true)

@@ -36,6 +36,7 @@ class Alarm(time: LocalTime) {
 
     companion object {
         const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
+        const val ACTION_ALARM_TRIGGERED = BuildConfig.APPLICATION_ID + ".ACTION_ALARM_TRIGGERED"
         const val ACTION_STOP_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_STOP_ALARM"
         const val ACTION_SNOOZE_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_SNOOZE_ALARM"
 
@@ -93,7 +94,7 @@ class Alarm(time: LocalTime) {
     private fun scheduleAlarmForDay(context: Context, alarmManager: AlarmManager, day: Int) {
         val intent = createIntent(context, this, day)
 
-        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if(isRunning) {
             alarmManager.cancel(pendingIntent)
