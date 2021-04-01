@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 
@@ -12,6 +13,8 @@ class AlarmTriggeredActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_alarm_triggered)
+        Log.d("AlarmTriggeredActivity", "Showing fullscreen activity")
+
         // Screen and keyguard handling
         // See also: https://github.com/giorgosneokleous93/fullscreenintentexample/blob/28865fb3d719d843874771050cc2987340276c84/app/src/main/java/com/giorgosneokleous/fullscreenintentexample/ActivityUtils.kt#L1
 

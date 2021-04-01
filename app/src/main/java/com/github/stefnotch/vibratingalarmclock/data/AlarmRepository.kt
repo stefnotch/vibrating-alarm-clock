@@ -19,10 +19,8 @@ class AlarmRepository(context: Context) {
         return alarmDao.get(id)
     }
 
-    suspend fun insert(alarm: Alarm): Alarm {
-        alarmDao.insert(alarm)
-
-        return alarm
+    suspend fun insert(alarm: Alarm): Int {
+        return alarmDao.insert(alarm).toInt()
     }
 
     suspend fun delete(alarm: Alarm) {

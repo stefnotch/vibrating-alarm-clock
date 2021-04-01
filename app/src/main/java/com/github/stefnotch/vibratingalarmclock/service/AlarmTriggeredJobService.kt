@@ -67,9 +67,11 @@ class AlarmTriggeredJobService: JobService() {
 
                     val fullscreenAlarmIntent = Intent(applicationContext, AlarmTriggeredActivity::class.java).apply {
                         action = Alarm.ACTION_ALARM_TRIGGERED
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         putExtra("id", alarmId)
                     }
 
+                    // TODO: Hopefully its not https://stackoverflow.com/a/40421304
                     val notification = NotificationCompat.Builder(applicationContext, App.CHANNEL_ID)
                         .setSmallIcon(R.drawable.ic_baseline_alarm_24)
                         .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -79,7 +81,7 @@ class AlarmTriggeredJobService: JobService() {
                         .setContentText(alarm?.getFormattedTime(applicationContext) + " " + (alarm?.title ?: "Alarm with $alarmId not found"))
                         .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                         .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
-                        .setFullScreenIntent(PendingIntent.getBroadcast(applicationContext, alarmId, fullscreenAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT), true)
+                        .setFullScreenIntent(PendingIntent.getBroadcast(applicationContext, alarmId, fullscreenAlarmIntent, PendingIntent.FLAG_ONE_SHOT), true)
                         //.setDeleteIntent()
                         .setOngoing(true)
                         .setAutoCancel(true)

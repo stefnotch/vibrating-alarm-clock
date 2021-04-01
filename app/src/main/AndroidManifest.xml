@@ -34,7 +34,6 @@
         <activity
                 android:name=".AlarmTriggeredActivity"
                 android:showOnLockScreen="true"
-                android:supportsRtl="true"
                 android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
 
         <receiver

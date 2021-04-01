@@ -36,7 +36,7 @@ class Alarm(time: LocalTime) {
 
     companion object {
         const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
-        const val ACTION_ALARM_TRIGGERED = BuildConfig.APPLICATION_ID + ".ACTION_ALARM_TRIGGERED"
+        const val ACTION_ALARM_TRIGGERED = BuildConfig.APPLICATION_ID + ".ACTION_TRIGGERED_ALARM"
         const val ACTION_STOP_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_STOP_ALARM"
         const val ACTION_SNOOZE_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_SNOOZE_ALARM"
 
