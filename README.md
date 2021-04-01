@@ -4,7 +4,6 @@ A little Android alarm clock that talks to a vibrator
 ## TODO:
 - Show "not connected" warning if we aren't connected
 - Snooze
-- Aw, we do need a popup thingy https://developer.android.com/training/notify-user/build-notification#urgent-message
 
 ## Extra stuff for later
 - Auto reconnect on (alarm)restart
