@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.github.stefnotch.vibratingalarmclock">
 
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
     <uses-feature
             android:name="android.hardware.bluetooth_le"
@@ -34,6 +35,8 @@
         <activity
                 android:name=".AlarmTriggeredActivity"
                 android:showOnLockScreen="true"
+                android:showWhenLocked="true"
+                android:turnScreenOn="true"
                 android:theme="@style/AppTheme.NoActionBar.FullScreen"/>
 
         <receiver

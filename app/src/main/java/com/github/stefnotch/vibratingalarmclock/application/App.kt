@@ -9,7 +9,7 @@ import android.content.Context
 class App: Application() {
 
     companion object {
-        val CHANNEL_ID = "ALARM_SERVICE_CHANNEL"
+        const val CHANNEL_ID = "ALARM_SERVICE_CHANNEL"
     }
 
     override fun onCreate() {
