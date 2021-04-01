@@ -81,7 +81,7 @@ class AlarmTriggeredJobService: JobService() {
                         .setContentText(alarm?.getFormattedTime(applicationContext) + " " + (alarm?.title ?: "Alarm with $alarmId not found"))
                         .addAction(R.drawable.ic_baseline_alarm_off_24, "Stop Alarm", PendingIntent.getBroadcast(applicationContext, alarmId, stopAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
                         .setContentIntent(PendingIntent.getBroadcast(applicationContext, alarmId, snoozeAlarmIntent, PendingIntent.FLAG_UPDATE_CURRENT))
-                        .setFullScreenIntent(PendingIntent.getBroadcast(applicationContext, alarmId, fullscreenAlarmIntent, PendingIntent.FLAG_ONE_SHOT), true)
+                        .setFullScreenIntent(PendingIntent.getActivity(applicationContext, alarmId, fullscreenAlarmIntent, PendingIntent.FLAG_ONE_SHOT), true)
                         //.setDeleteIntent()
                         .setOngoing(true)
                         .setAutoCancel(true)
