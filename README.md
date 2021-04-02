@@ -3,6 +3,7 @@ A little Android alarm clock that talks to a vibrator
 
 ## TODO:
 - Snooze
+- First wake up the screen and then do the vibrations stuff
 
 ## Extra stuff for later
 - Show "not connected" warning if we aren't connected
