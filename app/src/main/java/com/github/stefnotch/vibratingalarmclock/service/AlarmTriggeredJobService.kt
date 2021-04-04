@@ -8,12 +8,16 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.os.ParcelUuid
 import android.os.PersistableBundle
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.stefnotch.vibratingalarmclock.AlarmTriggeredActivity
 import com.github.stefnotch.vibratingalarmclock.R
+import com.github.stefnotch.vibratingalarmclock.WakeLocker
 import com.github.stefnotch.vibratingalarmclock.application.App
 import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.broadcastreceiver.AlarmBroadcastReceiver
@@ -51,6 +55,17 @@ class AlarmTriggeredJobService: JobService() {
     private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
     override fun onStartJob(params: JobParameters?): Boolean {
+        Log.d("AlarmTriggeredJobService", "Alarm job triggered, about to vibrate")
+
+        val ble = BleConnection.getInstance()
+        ble.startVibrating()
+
+        // TODO: Or should we keep it awake for longer?
+        Handler(Looper.getMainLooper()).postDelayed(Runnable {
+            WakeLocker.release()
+        }, 1000)
+
+
         val alarmId: UUID? = params?.extras?.getString("id")?.let { UUID.fromString(it) }
         val alarmDay = params?.extras?.getInt("day", DaysOfTheWeek.None) ?: DaysOfTheWeek.None
         if(alarmId != null) {
@@ -124,10 +139,6 @@ class AlarmTriggeredJobService: JobService() {
                     with(NotificationManagerCompat.from(applicationContext)) {
                         notify(alarmId.toString(),0, notification)
                     }
-
-
-                    val ble = BleConnection.getInstance()
-                    ble.startVibrating()
 
                     if (alarm?.isRecurring == true && alarmDay != DaysOfTheWeek.None) {
                         alarm.scheduleAlarmForNextDay(applicationContext, alarmDay)

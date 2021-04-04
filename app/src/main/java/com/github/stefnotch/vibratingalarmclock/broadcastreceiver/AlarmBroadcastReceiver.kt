@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.ParcelUuid
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.github.stefnotch.vibratingalarmclock.WakeLocker
 import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
@@ -30,6 +31,7 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                 Alarm.IS_ACTION_ALARM(intent.action) -> {
                     Log.d("AlarmBroadcastReceiver", "Alarm triggered")
                     if (context != null) {
+                        WakeLocker.acquire(context)
                         Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
                         AlarmTriggeredJobService.scheduleJob(
                             context,
