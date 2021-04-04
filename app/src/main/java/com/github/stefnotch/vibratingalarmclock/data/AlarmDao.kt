@@ -20,6 +20,12 @@ interface AlarmDao {
     @Query("SELECT * FROM alarms ORDER BY title ASC")
     suspend fun getAll(): List<Alarm>
 
+    @Query("SELECT * FROM alarms WHERE isSnooze=0 ORDER BY title ASC")
+    suspend fun getAllNonSnoozed(): List<Alarm>
+
+    @Query("SELECT * FROM alarms WHERE isSnooze=1 ORDER BY title ASC")
+    suspend fun getAllSnoozed(): List<Alarm>
+
     @Update
     suspend fun update(alarm: Alarm)
 }

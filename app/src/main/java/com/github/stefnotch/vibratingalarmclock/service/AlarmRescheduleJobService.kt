@@ -37,10 +37,14 @@ class AlarmRescheduleJobService: JobService() {
         serviceScope.launch {
             withContext(Dispatchers.IO) {
                 val alarmRepository = AlarmRepository(applicationContext)
-                alarmRepository.getAll().forEach {
+                alarmRepository.getAllNonSnoozed().forEach {
                     if(it.isRunning) {
                         it.scheduleAlarm(applicationContext)
                     }
+                }
+
+                alarmRepository.getAllSnoozed().forEach {
+                    alarmRepository.delete(it)
                 }
 
                 restartOnDestroy = false

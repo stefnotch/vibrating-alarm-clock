@@ -97,14 +97,6 @@ class AlarmTriggeredJobService: JobService() {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
                         )
-                        .setContentIntent(
-                            PendingIntent.getBroadcast(
-                                applicationContext,
-                                0,
-                                snoozeAlarmIntent,
-                                PendingIntent.FLAG_UPDATE_CURRENT
-                            )
-                        )
                         .setFullScreenIntent(
                             PendingIntent.getActivity(
                                 applicationContext,
@@ -113,7 +105,12 @@ class AlarmTriggeredJobService: JobService() {
                                 PendingIntent.FLAG_ONE_SHOT
                             ), true
                         )
-                        //.setDeleteIntent()
+                        .setDeleteIntent(PendingIntent.getBroadcast(
+                            applicationContext,
+                            0,
+                            snoozeAlarmIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                        ))
                         .setOngoing(true)
                         .setAutoCancel(true)
                         .build()

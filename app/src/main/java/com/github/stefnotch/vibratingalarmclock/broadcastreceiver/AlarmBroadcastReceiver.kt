@@ -10,7 +10,9 @@ import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
 import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import com.github.stefnotch.vibratingalarmclock.data.DaysOfTheWeek
 import com.github.stefnotch.vibratingalarmclock.service.AlarmRescheduleJobService
+import com.github.stefnotch.vibratingalarmclock.service.AlarmSnoozeJobService
 import com.github.stefnotch.vibratingalarmclock.service.AlarmTriggeredJobService
+import java.time.LocalTime
 
 class AlarmBroadcastReceiver : BroadcastReceiver() {
 
@@ -47,12 +49,19 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                     // Alarm has happened and optionally, a new one (next week) has been scheduled
                     val ble = BleConnection.getInstance()
                     ble.stopVibrating()
+
+                    // TODO: If the alarm is a snooze alarm, stop it now
                 }
                 Alarm.IS_ACTION_SNOOZE_ALARM(intent.action) -> {
                     val ble = BleConnection.getInstance()
                     ble.stopVibrating()
-                    // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interfere with the optional next week alarm
-
+                    // Schedule snoozed alarm (9 minutes) and make sure to not interfere with the optional next week alarm
+                    if (context != null) {
+                        AlarmSnoozeJobService.scheduleJob(
+                            context,
+                            intent.getParcelableExtra<ParcelUuid>("id")?.uuid
+                        )
+                    }
                 }
             }
         }

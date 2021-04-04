@@ -29,8 +29,12 @@ class AlarmRepository(context: Context) {
         return alarmDao.delete(alarm)
     }
 
-    suspend fun getAll(): List<Alarm> {
-        return alarmDao.getAll()
+    suspend fun getAllNonSnoozed(): List<Alarm> {
+        return alarmDao.getAllNonSnoozed()
+    }
+
+    suspend fun getAllSnoozed(): List<Alarm> {
+        return alarmDao.getAllSnoozed()
     }
 
     suspend fun update(alarm: Alarm){

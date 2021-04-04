@@ -2,11 +2,7 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-- Snooze (now quite doable since alarms are super unique and super won't have collisions)
-  - Add a new field to alarm (isTemporary)
-  - When starting the device (we got a trigger there), query all isTemporary and delete them
-  - Change getAll to exclude the isTemporary ones (prolly change the name as well)
-  - When the user hits the snooze button, just schedule a temporary alarm. And slap that bad boy into the database
+- Fix the snooze stuff (notification are weird)
 - First wake up the screen and then do the vibrations stuff
 - Test it https://developer.android.com/training/monitoring-device-state/doze-standby#testing_doze
 - Maybe we have to use a https://developer.android.com/reference/android/os/PowerManager.WakeLock

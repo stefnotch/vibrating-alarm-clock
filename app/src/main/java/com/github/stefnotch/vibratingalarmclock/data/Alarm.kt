@@ -24,7 +24,6 @@ import java.util.*
 
 @Entity(tableName = "alarms")
 class Alarm(time: LocalTime) {
-
     @PrimaryKey
     @NonNull
     var id: UUID = UUID.randomUUID()
@@ -36,6 +35,8 @@ class Alarm(time: LocalTime) {
     var days = DaysOfTheWeek.None
 
     var isRunning = false
+
+    var isSnooze: Boolean = false // If it is a temporary snooze alarm
 
     companion object {
         private const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM."

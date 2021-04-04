@@ -34,7 +34,7 @@ class FirstFragment : Fragment() {
         // alarmList.setHasFixedSize(true)
         lifecycleScope.launch {
             val alarmRepository = AlarmRepository(requireContext())
-            alarmList.adapter = AlarmAdapter(alarmRepository.getAll(), findNavController(), lifecycleScope, requireContext())
+            alarmList.adapter = AlarmAdapter(alarmRepository.getAllNonSnoozed(), findNavController(), lifecycleScope, requireContext())
         }
 
         view.findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {

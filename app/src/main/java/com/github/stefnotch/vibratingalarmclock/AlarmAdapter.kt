@@ -33,7 +33,7 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
                             alarms[position].cancelAlarm(context)
                             alarmRepository.delete(alarms[position])
                         }
-                        alarms = alarmRepository.getAll()
+                        alarms = alarmRepository.getAllNonSnoozed()
                         notifyDataSetChanged()
                         supportActionMode?.finish()
                     }
