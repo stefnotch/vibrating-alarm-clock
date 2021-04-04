@@ -53,8 +53,16 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
                     // TODO: If the alarm is a snooze alarm, stop it now
                 }
                 Alarm.IS_ACTION_SNOOZE_ALARM(intent.action) -> {
+                    val id = intent.getParcelableExtra<ParcelUuid>("id")?.uuid
+                    if (id != null && context != null) {
+                        with(NotificationManagerCompat.from(context)) {
+                            cancel(id.toString(), 0)
+                        }
+                    }
+
                     val ble = BleConnection.getInstance()
                     ble.stopVibrating()
+
                     // Schedule snoozed alarm (9 minutes) and make sure to not interfere with the optional next week alarm
                     if (context != null) {
                         AlarmSnoozeJobService.scheduleJob(

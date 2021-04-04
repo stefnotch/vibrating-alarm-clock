@@ -33,7 +33,7 @@ class AlarmSnoozeJobService : JobService() {
 
             val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             jobScheduler.schedule(
-                JobInfo.Builder(JOB_ID, ComponentName(context, AlarmTriggeredJobService::class.java))
+                JobInfo.Builder(JOB_ID, ComponentName(context, AlarmSnoozeJobService::class.java))
                     .setExtras(PersistableBundle().apply { putString("id", alarmId.toString()); })
                     .setOverrideDeadline(0)
                     .build()

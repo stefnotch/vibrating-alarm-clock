@@ -97,6 +97,12 @@ class AlarmTriggeredJobService: JobService() {
                                 PendingIntent.FLAG_UPDATE_CURRENT
                             )
                         )
+                        .setContentIntent(PendingIntent.getBroadcast(
+                            applicationContext,
+                            0,
+                            snoozeAlarmIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                        ))
                         .setFullScreenIntent(
                             PendingIntent.getActivity(
                                 applicationContext,

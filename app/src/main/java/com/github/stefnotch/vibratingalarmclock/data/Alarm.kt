@@ -72,14 +72,6 @@ class Alarm(time: LocalTime) {
             return value?.startsWith(ACTION_SNOOZE_ALARM) == true
         }
 
-        private var toast: Toast? = null
-
-        fun showMessage(context: Context, text: String) {
-            toast?.cancel()
-            toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
-            toast?.show()
-        }
-
         fun createAlarmIntent(context: Context, alarm: Alarm, day: Int): Intent {
             val intent = Intent(context, AlarmBroadcastReceiver::class.java)
             intent.action = ACTION_ALARM(alarm) + "_" + day // Make sure to generate a unique intent for every day
@@ -119,7 +111,7 @@ class Alarm(time: LocalTime) {
             if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) scheduleAlarmForDay(context, alarmManager, DaysOfTheWeek.Sunday)
         }
 
-        showMessage(context, "Scheduled Alarm")
+
         isRunning = true
     }
 
@@ -185,7 +177,6 @@ class Alarm(time: LocalTime) {
                 alarmManager.cancel(pendingIntent)
             }
         }
-        showMessage(context, "Cancelled Alarm")
         isRunning = false
     }
 

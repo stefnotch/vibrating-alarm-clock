@@ -1,5 +1,6 @@
 package com.github.stefnotch.vibratingalarmclock
 
+import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.util.Log
@@ -7,10 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -53,6 +51,14 @@ class SecondFragment : Fragment() {
                 return Pair(Alarm(LocalTime.now()), true)
             }
         }
+    }
+
+    private var toast: Toast? = null
+
+    fun showMessage(context: Context, text: String) {
+        toast?.cancel()
+        toast = Toast.makeText(context, text, Toast.LENGTH_SHORT)
+        toast?.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -128,6 +134,7 @@ class SecondFragment : Fragment() {
                         alarm.scheduleAlarm(requireContext())
                         alarmRepository.update(alarm)
                     }
+                    showMessage(requireContext(), "Scheduled Alarm")
                     findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
                 }
             }
