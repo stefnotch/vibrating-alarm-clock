@@ -1,6 +1,7 @@
 package com.github.stefnotch.vibratingalarmclock
 
 import android.content.Context
+import android.os.ParcelUuid
 import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -89,7 +90,7 @@ class AlarmAdapter(private var alarms: List<Alarm>, private val navController: N
         viewHolder.daysElement.text = alarms[position].getDaysText()
         viewHolder.isRunningElement.isChecked = alarms[position].isRunning
         viewHolder.card.setOnClickListener {
-            navController.navigate(FirstFragmentDirections.actionFirstFragmentToSecondFragment(alarms[position].id))
+            navController.navigate(FirstFragmentDirections.actionFirstFragmentToSecondFragment(ParcelUuid(alarms[position].id)))
         }
         viewHolder.isRunningElement.setOnClickListener {
             if(viewHolder.isRunningElement.isChecked) {

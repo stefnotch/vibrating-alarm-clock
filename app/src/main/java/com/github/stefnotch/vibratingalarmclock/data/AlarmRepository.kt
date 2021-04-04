@@ -6,6 +6,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import java.time.LocalTime
+import java.util.*
 
 class AlarmRepository(context: Context) {
     private val alarmDao: AlarmDao
@@ -15,12 +17,12 @@ class AlarmRepository(context: Context) {
         alarmDao = db.alarmDao()
     }
 
-    suspend fun get(id: Int): Alarm? {
+    suspend fun get(id: UUID): Alarm? {
         return alarmDao.get(id)
     }
 
-    suspend fun insert(alarm: Alarm): Int {
-        return alarmDao.insert(alarm).toInt()
+    suspend fun insert(alarm: Alarm) {
+        alarmDao.insert(alarm)
     }
 
     suspend fun delete(alarm: Alarm) {

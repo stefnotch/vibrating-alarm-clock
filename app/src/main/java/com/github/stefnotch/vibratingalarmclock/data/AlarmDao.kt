@@ -4,14 +4,15 @@ import com.github.stefnotch.vibratingalarmclock.data.Alarm
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import android.database.Cursor;
+import java.util.*
 
 @Dao
 interface AlarmDao {
     @Query("SELECT * FROM alarms WHERE id=:id ")
-    suspend fun get(id: Int): Alarm?
+    suspend fun get(id: UUID): Alarm?
 
     @Insert
-    suspend fun insert(alarm: Alarm): Long
+    suspend fun insert(alarm: Alarm)
 
     @Delete
     suspend fun delete(alarm: Alarm)

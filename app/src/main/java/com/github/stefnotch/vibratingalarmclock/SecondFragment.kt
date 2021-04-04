@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.*
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -41,6 +42,19 @@ class SecondFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_second, container, false)
     }
 
+    suspend fun getOrCreate(alarmRepository: AlarmRepository, id: UUID?): Pair<Alarm, Boolean> {
+        if(id == null) {
+            return Pair(Alarm(LocalTime.now()), true)
+        } else {
+            val alarm = alarmRepository.get(id)
+            if(alarm != null) {
+                return Pair(alarm, false)
+            } else {
+                return Pair(Alarm(LocalTime.now()), true)
+            }
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -54,11 +68,7 @@ class SecondFragment : Fragment() {
 
         lifecycleScope.launch {
             val alarmRepository = AlarmRepository(requireContext())
-            var isNewAlarm = false
-            val alarm =
-                if (args.alarmId == -1) Alarm(LocalTime.now()).let { isNewAlarm = true; it } else (alarmRepository.get(
-                    args.alarmId
-                ) ?: Alarm(LocalTime.now()).let { isNewAlarm = true; it })
+            val (alarm, isNewAlarm) = getOrCreate(alarmRepository, args.alarmId?.uuid)
 
             textInput.setText(alarm.title)
             okButton.isEnabled = !textInput.text?.toString().isNullOrBlank()
@@ -112,12 +122,8 @@ class SecondFragment : Fragment() {
                 lifecycleScope.launch {
                     alarm.title = textInput.text.toString()
                     if(isNewAlarm) {
-                        val alarmId = alarmRepository.insert(alarm)
-                        val newAlarm = alarmRepository.get(alarmId)
-                        if(newAlarm != null) {
-                            newAlarm.scheduleAlarm(requireContext())
-                            alarmRepository.update(newAlarm)
-                        }
+                        alarm.scheduleAlarm(requireContext())
+                        alarmRepository.insert(alarm)
                     } else {
                         alarm.scheduleAlarm(requireContext())
                         alarmRepository.update(alarm)

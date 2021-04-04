@@ -3,6 +3,7 @@ package com.github.stefnotch.vibratingalarmclock.broadcastreceiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.ParcelUuid
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.github.stefnotch.vibratingalarmclock.ble.BleConnection
@@ -17,50 +18,42 @@ class AlarmBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             Intent.ACTION_BOOT_COMPLETED -> {
-                if(context != null) {
+                if (context != null) {
                     AlarmRescheduleJobService.scheduleJob(context)
                 }
             }
-            Alarm.ACTION_ALARM -> {
-                Log.d("AlarmBroadcastReceiver", "Alarm triggered")
-                if (context != null) {
-                    Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
-                    AlarmTriggeredJobService.scheduleJob(
-                        context,
-                        intent.getIntExtra("id", 0),
-                        intent.getIntExtra("day", DaysOfTheWeek.None)
-                    )
-                }
-            }
-            Alarm.ACTION_STOP_ALARM -> {
-                val id = if(intent.hasExtra("id")) intent.getIntExtra("id", 0) else null
-                if(id != null && context != null) {
-                    with(NotificationManagerCompat.from(context)) {
-                        cancel(id)
+        }
+        if(intent != null) {
+            when (true) {
+                Alarm.IS_ACTION_ALARM(intent.action) -> {
+                    Log.d("AlarmBroadcastReceiver", "Alarm triggered")
+                    if (context != null) {
+                        Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
+                        AlarmTriggeredJobService.scheduleJob(
+                            context,
+                            intent.getParcelableExtra<ParcelUuid>("id")?.uuid,
+                            intent.getIntExtra("day", DaysOfTheWeek.None)
+                        )
                     }
                 }
+                Alarm.IS_ACTION_STOP_ALARM(intent.action) -> {
+                    val id = intent.getParcelableExtra<ParcelUuid>("id")?.uuid
+                    if (id != null && context != null) {
+                        with(NotificationManagerCompat.from(context)) {
+                            cancel(id.toString(), 0)
+                        }
+                    }
 
-                // Alarm has happened and optionally, a new one (next week) has been scheduled
-                val ble = BleConnection.getInstance()
-                ble.stopVibrating()
-            }
-            Alarm.ACTION_SNOOZE_ALARM -> {
-                val ble = BleConnection.getInstance()
-                ble.stopVibrating()
-                // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interefere with the optional next week alarm
+                    // Alarm has happened and optionally, a new one (next week) has been scheduled
+                    val ble = BleConnection.getInstance()
+                    ble.stopVibrating()
+                }
+                Alarm.IS_ACTION_SNOOZE_ALARM(intent.action) -> {
+                    val ble = BleConnection.getInstance()
+                    ble.stopVibrating()
+                    // TODO: Schedule snoozed alarm (5 minutes) and make sure to not interfere with the optional next week alarm
 
-            }
-        }
-
-        if(intent?.action?.startsWith(Alarm.ACTION_ALARM) == true) {
-            Log.d("AlarmBroadcastReceiver", "Alarm triggered")
-            if (context != null) {
-                Log.d("AlarmBroadcastReceiver", "Alarm vibration scheduled")
-                AlarmTriggeredJobService.scheduleJob(
-                    context,
-                    intent.getIntExtra("id", 0),
-                    intent.getIntExtra("day", DaysOfTheWeek.None)
-                )
+                }
             }
         }
     }

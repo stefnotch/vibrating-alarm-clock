@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.ParcelUuid
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull
@@ -18,13 +19,15 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.time.temporal.TemporalAdjusters
+import java.util.*
 
 
 @Entity(tableName = "alarms")
 class Alarm(time: LocalTime) {
-    @PrimaryKey(autoGenerate = true)
+
+    @PrimaryKey
     @NonNull
-    var id: Int = 0 // Should be readonly, whatever
+    var id: UUID = UUID.randomUUID()
 
     var title = ""
     var time = time // Relative to the current time zone!
@@ -35,10 +38,38 @@ class Alarm(time: LocalTime) {
     var isRunning = false
 
     companion object {
-        const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM"
-        const val ACTION_ALARM_TRIGGERED = BuildConfig.APPLICATION_ID + ".ACTION_TRIGGERED_ALARM"
-        const val ACTION_STOP_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_STOP_ALARM"
-        const val ACTION_SNOOZE_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_SNOOZE_ALARM"
+        private const val ACTION_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_ALARM."
+        private const val ACTION_ALARM_TRIGGERED = BuildConfig.APPLICATION_ID + ".ACTION_TRIGGERED_ALARM."
+        private const val ACTION_STOP_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_STOP_ALARM."
+        private const val ACTION_SNOOZE_ALARM = BuildConfig.APPLICATION_ID + ".ACTION_SNOOZE_ALARM."
+
+        fun ACTION_ALARM(alarm: Alarm): String {
+            return ACTION_ALARM + alarm.id.toString()
+        }
+        fun IS_ACTION_ALARM(value: String?): Boolean {
+            return value?.startsWith(ACTION_ALARM) == true
+        }
+
+        fun ACTION_ALARM_TRIGGERED(alarm: Alarm): String {
+            return ACTION_ALARM_TRIGGERED + alarm.id.toString()
+        }
+        fun IS_ACTION_ALARM_TRIGGERED(value: String?): Boolean {
+            return value?.startsWith(ACTION_ALARM_TRIGGERED) == true
+        }
+
+        fun ACTION_STOP_ALARM(alarm: Alarm): String {
+            return ACTION_STOP_ALARM + alarm.id.toString()
+        }
+        fun IS_ACTION_STOP_ALARM(value: String?): Boolean {
+            return value?.startsWith(ACTION_STOP_ALARM) == true
+        }
+
+        fun ACTION_SNOOZE_ALARM(alarm: Alarm): String {
+            return ACTION_SNOOZE_ALARM + alarm.id.toString()
+        }
+        fun IS_ACTION_SNOOZE_ALARM(value: String?): Boolean {
+            return value?.startsWith(ACTION_SNOOZE_ALARM) == true
+        }
 
         private var toast: Toast? = null
 
@@ -48,10 +79,10 @@ class Alarm(time: LocalTime) {
             toast?.show()
         }
 
-        fun createIntent(context: Context, alarm: Alarm, day: Int): Intent {
+        fun createAlarmIntent(context: Context, alarm: Alarm, day: Int): Intent {
             val intent = Intent(context, AlarmBroadcastReceiver::class.java)
-            intent.action = ACTION_ALARM + "_" + day // Make sure to generate a unique intent
-            intent.putExtra("id", alarm.id)
+            intent.action = ACTION_ALARM(alarm) + "_" + day // Make sure to generate a unique intent for every day
+            intent.putExtra("id", ParcelUuid(alarm.id))
             intent.putExtra("day", day)
 
             return intent
@@ -62,8 +93,8 @@ class Alarm(time: LocalTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         if(!isRecurring) {
-            val intent = createIntent(context, this, DaysOfTheWeek.None)
-            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val intent = createAlarmIntent(context, this, DaysOfTheWeek.None)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
             if(isRunning) {
                 alarmManager.cancel(pendingIntent)
@@ -92,9 +123,9 @@ class Alarm(time: LocalTime) {
     }
 
     private fun scheduleAlarmForDay(context: Context, alarmManager: AlarmManager, day: Int) {
-        val intent = createIntent(context, this, day)
+        val intent = createAlarmIntent(context, this, day)
 
-        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if(isRunning) {
             alarmManager.cancel(pendingIntent)
@@ -115,8 +146,8 @@ class Alarm(time: LocalTime) {
     fun scheduleAlarmForNextDay(context: Context, day: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val intent = createIntent(context, this, day)
-        val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val intent = createAlarmIntent(context, this, day)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if(isRunning) {
             alarmManager.cancel(pendingIntent)
@@ -143,13 +174,13 @@ class Alarm(time: LocalTime) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         if(!isRecurring) {
-            val intent = createIntent(context, this, DaysOfTheWeek.None)
-            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val intent = createAlarmIntent(context, this, DaysOfTheWeek.None)
+            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
             alarmManager.cancel(pendingIntent)
         } else {
             DaysOfTheWeek.everyDay().forEach {
-                val intent = createIntent(context, this, it)
-                val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val intent = createAlarmIntent(context, this, it)
+                val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
                 alarmManager.cancel(pendingIntent)
             }
         }
