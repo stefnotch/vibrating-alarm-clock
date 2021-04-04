@@ -20,12 +20,10 @@ class MainActivity : AppCompatActivity() {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
 
-        // TODO: Show this when we aren't connected and hide it again once we are actually connected
-        /*
         if(!BleConnection.getInstance().isConnected()) {
             menu.findItem(R.id.action_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-        }*/
+        }
 
         return true
     }

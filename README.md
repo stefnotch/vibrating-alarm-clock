@@ -2,7 +2,6 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-- Show "not connected" warning if we aren't connected
 - Snooze (now quite doable since alarms are super unique and super won't have collisions)
   - Add a new field to alarm (isTemporary)
   - When starting the device (we got a trigger there), query all isTemporary and delete them
@@ -13,9 +12,7 @@ A little Android alarm clock that talks to a vibrator
 - Maybe we have to use a https://developer.android.com/reference/android/os/PowerManager.WakeLock
 
 ## Extra stuff for later
-- Show "not connected" warning if we aren't connected
 - Better scanning interface and faster scanning
-- Show that connect button if we aren't connected
 - Warn on missing location (turned off) and better permissions management
 - Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
 - Figure out why the lipstick keeps glowing

@@ -1,6 +1,7 @@
 package com.github.stefnotch.vibratingalarmclock
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -54,6 +56,7 @@ class ConnectFragment : Fragment() {
         view.findViewById<Button>(R.id.button_connect).setOnClickListener {
             val ble = BleConnection.getInstance()
             ble.connectToLipstick(requireContext())
+            requireActivity().invalidateOptionsMenu()
             // TODO: Check if connection was successful
         }
     }
@@ -82,5 +85,6 @@ class ConnectFragment : Fragment() {
 
         val ble = BleConnection.getInstance()
         ble.stopScanning()
+        requireActivity().invalidateOptionsMenu()
     }
 }

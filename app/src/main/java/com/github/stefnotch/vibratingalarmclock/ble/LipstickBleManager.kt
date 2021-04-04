@@ -51,17 +51,6 @@ class LipstickBleManager(context: Context): BleManager(context) {
                             "Requested MTU not supported: $status"
                         )
                     })
-                .add(setPreferredPhy(
-                    PhyRequest.PHY_LE_1M_MASK,
-                    PhyRequest.PHY_LE_2M_MASK,
-                    PhyRequest.PHY_OPTION_NO_PREFERRED
-                )
-                    .fail { device: BluetoothDevice?, status: Int ->
-                        log(
-                            Log.WARN,
-                            "Requested PHY not supported: $status"
-                        )
-                    })
                 .done { device: BluetoothDevice? -> log(Log.INFO, "Target initialized") }
                 .enqueue()
         }
@@ -72,7 +61,6 @@ class LipstickBleManager(context: Context): BleManager(context) {
     }
 
     fun vibrate(strength: Byte, secondValue: Byte) {
-        // Boi, I wonder if this works or if Kotlin is going to screw me over
         writeCharacteristic(vibrationCharacteristic, byteArrayOf(
             0x10.toByte(),
             0xff.toByte(),
