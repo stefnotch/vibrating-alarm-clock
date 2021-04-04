@@ -2,18 +2,19 @@
 A little Android alarm clock that talks to a vibrator
 
 ## TODO:
-- Fix the snooze stuff (notification are weird)
 - First wake up the screen and then do the vibrations stuff
 - Test it https://developer.android.com/training/monitoring-device-state/doze-standby#testing_doze
 - Maybe we have to use a https://developer.android.com/reference/android/os/PowerManager.WakeLock
 
 ## Extra stuff for later
+- Refresh alarms list when an alarm got triggered
 - Better scanning interface and faster scanning
 - Warn on missing location (turned off) and better permissions management
 - Bonding, if possible https://github.com/NordicSemiconductor/Android-BLE-Library/issues/35
 - Figure out why the lipstick keeps glowing
 - Tell user if connecting worked and stuff https://punchthrough.com/android-ble-guide/
 - Useful reference https://github.com/NordicSemiconductor/Android-nRF-Blinky/blob/master/app/src/main/java/no/nordicsemi/android/blinky/viewmodels/ScannerViewModel.java
+- Manually stop snoozed alarm (somehow)
 
 Probably not required anymore:
 - Auto reconnect on (alarm)restart
