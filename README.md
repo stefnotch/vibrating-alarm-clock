@@ -1,10 +1,9 @@
 # vibrating-alarm-clock
 A little Android alarm clock that talks to a vibrator
 
-## TODO:
-- First wake up the screen and then do the vibrations stuff
-- Test it https://developer.android.com/training/monitoring-device-state/doze-standby#testing_doze
-- Maybe we have to use a https://developer.android.com/reference/android/os/PowerManager.WakeLock
+![Screenshot](screenshot.png)
+
+
 
 ## Extra stuff for later
 - Refresh alarms list when an alarm got triggered
