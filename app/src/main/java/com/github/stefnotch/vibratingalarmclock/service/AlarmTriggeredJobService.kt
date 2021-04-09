@@ -60,12 +60,6 @@ class AlarmTriggeredJobService: JobService() {
         val ble = BleConnection.getInstance()
         ble.startVibrating()
 
-        // TODO: Or should we keep it awake for longer?
-        Handler(Looper.getMainLooper()).postDelayed(Runnable {
-            WakeLocker.release()
-        }, 1000)
-
-
         val alarmId: UUID? = params?.extras?.getString("id")?.let { UUID.fromString(it) }
         val alarmDay = params?.extras?.getInt("day", DaysOfTheWeek.None) ?: DaysOfTheWeek.None
         if(alarmId != null) {
@@ -146,6 +140,11 @@ class AlarmTriggeredJobService: JobService() {
                         alarm.isRunning = false
                         alarmRepository.update(alarm)
                     }
+
+                    Handler(Looper.getMainLooper()).postDelayed(Runnable {
+                        WakeLocker.release()
+                    }, 5000)
+
                     restartOnDestroy = false
                     jobFinished(params, false)
                 }

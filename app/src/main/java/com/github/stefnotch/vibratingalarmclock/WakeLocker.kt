@@ -12,8 +12,11 @@ class WakeLocker {
             wakeLock?.release()
 
             val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            wakeLock = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE, LOCK_TAG)
-            wakeLock?.acquire(10*60*1000L /*10 minutes*/)
+            wakeLock = powerManager.newWakeLock(
+                PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.ON_AFTER_RELEASE or PowerManager.PARTIAL_WAKE_LOCK,
+                LOCK_TAG
+            )
+            wakeLock?.acquire(10 * 60 * 1000L /*10 minutes*/)
         }
 
         fun release() {
