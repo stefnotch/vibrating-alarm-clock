@@ -199,13 +199,13 @@ class Alarm(time: LocalTime) {
         if(!isRecurring) return "Once off"
 
         var returnText = ""
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) returnText += "Mo"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Tuesday)) returnText += "Tu"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Wednesday)) returnText += "We"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Thursday)) returnText += "Th"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Friday)) returnText += "Fr"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Saturday)) returnText += "Sa"
-        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) returnText += "Su"
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Monday)) returnText += "Mo "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Tuesday)) returnText += "Tu "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Wednesday)) returnText += "We "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Thursday)) returnText += "Th "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Friday)) returnText += "Fr "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Saturday)) returnText += "Sa "
+        if (DaysOfTheWeek.contains(days, DaysOfTheWeek.Sunday)) returnText += "Su "
 
         return returnText
     }
