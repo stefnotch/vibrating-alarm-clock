@@ -3,7 +3,9 @@ A little Android alarm clock that talks to a vibrator
 
 ![Screenshot](screenshot.png)
 
-
+## TODO
+- https://stackoverflow.com/a/55869641
+- Cancel alarm notification when alarm is turned off
 
 ## Extra stuff for later
 - Refresh alarms list when an alarm got triggered
