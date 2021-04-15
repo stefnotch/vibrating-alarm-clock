@@ -5,7 +5,6 @@ A little Android alarm clock that talks to a vibrator
 
 ## TODO
 - https://stackoverflow.com/a/55869641
-- Cancel alarm notification when alarm is turned off
 
 ## Extra stuff for later
 - Refresh alarms list when an alarm got triggered
@@ -16,6 +15,7 @@ A little Android alarm clock that talks to a vibrator
 - Tell user if connecting worked and stuff https://punchthrough.com/android-ble-guide/
 - Useful reference https://github.com/NordicSemiconductor/Android-nRF-Blinky/blob/master/app/src/main/java/no/nordicsemi/android/blinky/viewmodels/ScannerViewModel.java
 - Manually stop snoozed alarm (somehow)
+- Cancel alarm notification when alarm is manually turned off
 
 Probably not required anymore:
 - Auto reconnect on (alarm)restart
