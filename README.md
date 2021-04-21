@@ -7,6 +7,7 @@ A little Android alarm clock that talks to a vibrator
 - https://stackoverflow.com/a/55869641
 
 ## Extra stuff for later
+- Move alarm clock to different process?
 - Refresh alarms list when an alarm got triggered
 - Better scanning interface and faster scanning
 - Warn on missing location (turned off) and better permissions management
