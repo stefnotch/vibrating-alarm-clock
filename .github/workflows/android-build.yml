@@ -49,7 +49,8 @@ jobs:
 
     # Upload the APK so you can download it
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: vibrating-alarm-clock-development-debug
         path: app/build/outputs/apk/development/debug/*.apk
+        if-no-files-found: error
