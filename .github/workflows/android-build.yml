@@ -23,7 +23,15 @@ jobs:
         java-version: '8'
         cache: gradle
 
-    # Install Android SDK components explicitly
+    # ----------------------------
+    # Java 17 FOR SDKMANAGER ONLY
+    # ----------------------------
+    - name: Set up JDK 17 (for Android SDK tools)
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '17'
+
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
@@ -34,6 +42,16 @@ jobs:
 
     - name: Accept licenses
       run: yes | sdkmanager --licenses
+
+    # ----------------------------
+    # Java 8 FOR GRADLE BUILD
+    # ----------------------------
+    - name: Switch to JDK 8 (for Gradle / AGP)
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '8'
+        cache: gradle
 
     # Gradle wrapper must be executable
     - name: Make gradlew executable
