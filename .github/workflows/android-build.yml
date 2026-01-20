@@ -1,0 +1,55 @@
+name: Android CI Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # IMPORTANT: Java 8 for older Android Gradle Plugin
+    - name: Set up JDK 8
+      uses: actions/setup-java@v4
+      with:
+        distribution: temurin
+        java-version: '8'
+        cache: gradle
+
+    # Install Android SDK components explicitly
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install Android SDK packages
+      run: |
+        sdkmanager "platforms;android-30"
+        sdkmanager "build-tools;30.0.3"
+
+    - name: Accept licenses
+      run: yes | sdkmanager --licenses
+
+    # Gradle wrapper must be executable
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
+
+    # Optional but very helpful for older projects
+    - name: Disable Gradle daemon
+      run: echo "org.gradle.daemon=false" >> gradle.properties
+
+    # Build *developmentDebug* flavor explicitly
+    - name: Build developmentDebug APK
+      run: ./gradlew assembleDevelopmentDebug --stacktrace
+
+    # Upload the APK so you can download it
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: vibrating-alarm-clock-development-debug
+        path: app/build/outputs/apk/development/debug/*.apk
